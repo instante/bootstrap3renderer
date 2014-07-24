@@ -34,6 +34,9 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 		'Kdyby\Forms\Controls\CheckboxList',
 	);
 
+    /** @var int*/
+    private $labelColumns = 2;
+
 	/**
 	 * set to false, if you want to display the field errors also as form errors
 	 * @var bool
@@ -166,6 +169,7 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 		}
 
 		$el = $control->getControlPrototype();
+        
 		if ($placeholder = $control->getOption('placeholder')) {
 			if (!$placeholder instanceof Html && $translator) {
 				$placeholder = $translator->translate($placeholder);
@@ -180,9 +184,19 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 		}
 
 		if ($control instanceof Nette\Forms\ISubmitterControl) {
-			$el->addClass('btn');
+            $el->addClass('btn');
+
+            if($control->getOption('btn-class') !== NULL) {
+                $el->addClass($control->getOption('btn-class'));
+            } else {
+                $el->addClass('btn-default');
+            }
 
 		} else {
+            if($control instanceof Controls\TextBase || $control instanceof Controls\SelectBox) {
+                $el->addClass('form-control');
+            }
+
 			$label = $control->labelPrototype;
 			if ($control instanceof Controls\Checkbox) {
 				$label->addClass('checkbox');
@@ -193,7 +207,7 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 
 			$control->setOption('pairContainer', $pair = Html::el('div'));
 			$pair->id = $control->htmlId . '-pair';
-			$pair->addClass('control-group');
+			$pair->addClass('form-group');
 			if ($control->getOption('required', FALSE)) {
 				$pair->addClass('required');
 			}
