@@ -51,7 +51,7 @@
                 {elseif $renderer->isCheckbox($control)}
 
 					{var $label = $renderer::mergeAttrs($form[$name]->getLabel(), $attrs['label'])}
-                    <div n:tag-if="!$renderer->controlHasClass($control, 'inline')">
+                    <div class="checkbox" n:tag-if="!$renderer->controlHasClass($control, 'inline')">
                         {$label->startTag()|noescape}{$renderer::mergeAttrs($form[$name]->getControl(), $attrs['input'])}{$renderer->getLabelBody($control)}{$label->endTag()|noescape}{$error}{$description}
                     </div>
 
@@ -77,8 +77,10 @@
                     {$renderer::mergeAttrs($form[$name]->getLabel(), $attrs['label'])}
 
                     {var $prepend = $control->getOption('input-prepend'), $append = $control->getOption('input-append')}
-                    <div n:class="$prepend? input-prepend, $append? input-append" n:tag-if="$prepend || $append">
-                        {$prepend}{$renderer::mergeAttrs($form[$name]->getControl(), $attrs['input'])}{$append}
+                    <div class="input-group" n:tag-if="$prepend || $append">
+                        <div class="input-group-addon" n:tag-if="$prepend">{$prepend}</div>
+                        {$renderer::mergeAttrs($form[$name]->getControl(), $attrs['input'])}
+                        <div class="input-group-addon" n:tag-if="$append">{$append}</div>
                     </div>
                     {$error}{$description}
 

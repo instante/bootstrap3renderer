@@ -198,33 +198,20 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
             }
 
 			$label = $control->labelPrototype;
-			if ($control instanceof Controls\Checkbox) {
-				$label->addClass('checkbox');
-
-			} elseif (!$control instanceof Controls\RadioList && !self::isCheckboxList($control)) {
-				$label->addClass('control-label');
+			if (!$control instanceof Controls\Checkbox && !$control instanceof Controls\RadioList && !self::isCheckboxList($control)) {
+                $label->addClass('control-label');
 			}
 
 			$control->setOption('pairContainer', $pair = Html::el('div'));
 			$pair->id = $control->htmlId . '-pair';
-			$pair->addClass('form-group');
+            $pair->addClass('form-group');
+
+
 			if ($control->getOption('required', FALSE)) {
 				$pair->addClass('required');
 			}
 			if ($control->errors) {
 				$pair->addClass('error');
-			}
-
-			if ($prepend = $control->getOption('input-prepend')) {
-				$prepend = Html::el('span', array('class' => 'add-on'))
-					->{$prepend instanceof Html ? 'add' : 'setText'}($prepend);
-				$control->setOption('input-prepend', $prepend);
-			}
-
-			if ($append = $control->getOption('input-append')) {
-				$append = Html::el('span', array('class' => 'add-on'))
-					->{$append instanceof Html ? 'add' : 'setText'}($append);
-				$control->setOption('input-append', $append);
 			}
 		}
 	}
