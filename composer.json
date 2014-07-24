@@ -1,21 +1,9 @@
 {
-	"name": "kdyby/bootstrap-form-renderer",
+	"name": "instante/bootstrap-3-renderer",
 	"type": "library",
-	"description": "Nette forms renderer with bootstrap",
-	"keywords": ["nette", "kdyby", "forms", "bootstrap"],
-	"homepage": "http://kdyby.org",
+	"description": "Nette forms renderer with bootstrap 3",
+	"keywords": ["nette", "forms", "bootstrap", "bootstrap3"],
 	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
-	"authors": [
-		{
-			"name": "Filip Procházka",
-			"homepage": "http://filip-prochazka.com",
-			"email": "filip@prochazka.su"
-		}
-	],
-	"support": {
-		"email": "filip@prochazka.su",
-		"issues": "https://github.com/kdyby/BootstrapFormRenderer/issues"
-	},
 	"require": {
 		"nette/nette": "~2.1@dev"
 	},
@@ -25,7 +13,7 @@
 	},
 	"autoload": {
 		"psr-0": {
-			"Kdyby\\BootstrapFormRenderer\\": "src/"
+			"Instante\\Bootstrap3Renderer\\": "src/"
 		}
 	}
 }

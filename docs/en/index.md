@@ -1,4 +1,7 @@
-# Kdyby/BootstrapRenderer [![Build Status](https://secure.travis-ci.org/Kdyby/Framework.png?branch=master)](http://travis-ci.org/Kdyby/Framework)
+#
+!! THIS DOCUMENT IS OUTDATED, NEEDS REVISION FOR INSTANTE BS3 RENDERER
+
+Kdyby/BootstrapRenderer [![Build Status](https://secure.travis-ci.org/Kdyby/Framework.png?branch=master)](http://travis-ci.org/Kdyby/Framework)
 
 Forms Renderer for Nette Framework, that allows partial rendering and uses [Twitter Bootstrap markup and classes](http://twitter.github.com/bootstrap/base-css.html#forms).
 

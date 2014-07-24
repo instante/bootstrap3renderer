@@ -1,15 +1,13 @@
-Kdyby/BootstrapFormRenderer
+Instante/Bootstap3Renderer
 ======
 
-[![Build Status](https://travis-ci.org/Kdyby/BootstrapFormRenderer.svg?branch=master)](https://travis-ci.org/Kdyby/BootstrapFormRenderer)
-[![Downloads this Month](https://img.shields.io/packagist/dm/kdyby/bootstrap-form-renderer.svg)](https://packagist.org/packages/kdyby/bootstrap-form-renderer)
-[![Latest stable](https://img.shields.io/packagist/v/kdyby/bootstrap-form-renderer.svg)](https://packagist.org/packages/kdyby/bootstrap-form-renderer)
-
+Rendering Nette forms for Bootstrap 3
+Based on [http://github.com/kdyby/BootstrapFormRenderer](http://github.com/kdyby/BootstrapFormRenderer)
 
 Requirements
 ------------
 
-Kdyby/BootstrapFormRenderer requires PHP 5.3.2 or higher.
+- PHP 5.3.2 or higher
 
 - [Nette Framework](https://github.com/nette/nette)
 
@@ -17,19 +15,8 @@ Kdyby/BootstrapFormRenderer requires PHP 5.3.2 or higher.
 Installation
 ------------
 
-The best way to install Kdyby/BootstrapFormRenderer is using  [Composer](http://getcomposer.org/):
+The best way to install Instante/Bootstap3Renderer is using  [Composer](http://getcomposer.org/):
 
 ```sh
-$ composer require kdyby/bootstrap-form-renderer:@dev
+$ composer require instante/bootstrap-3-renderer:@dev
 ```
-
-
-Documentation
-------------
-
-Learn more in the [documentation](https://github.com/Kdyby/BootstrapFormRenderer/blob/master/docs/en/index.md).
-
-
------
-
-Homepage [http://www.kdyby.org](http://www.kdyby.org) and repository [http://github.com/kdyby/BootstrapFormRenderer](http://github.com/kdyby/BootstrapFormRenderer).

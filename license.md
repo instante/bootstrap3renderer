@@ -17,7 +17,7 @@ remains intact.
 New BSD License
 ---------------
 
-Copyright (c) 2008 Filip Procházka (http://filip-prochazka.com)
+Copyright (c) 2014 Mistylab
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,

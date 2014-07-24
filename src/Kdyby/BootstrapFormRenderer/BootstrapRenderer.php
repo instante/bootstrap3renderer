@@ -8,7 +8,7 @@
  * For the full copyright and license information, please view the file license.md that was distributed with this source code.
  */
 
-namespace Kdyby\BootstrapFormRenderer;
+namespace Instante\Bootstrap3Renderer;
 
 use Nette;
 use Nette\Forms\Controls;
