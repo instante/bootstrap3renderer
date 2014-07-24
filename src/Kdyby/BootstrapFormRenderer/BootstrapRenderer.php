@@ -34,8 +34,11 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 		'Kdyby\Forms\Controls\CheckboxList',
 	);
 
-    /** @var int*/
+    /** @var int */
     private $labelColumns = 2;
+
+    /** @var boolean */
+    private $horizontalMode = FALSE;
 
 	/**
 	 * set to false, if you want to display the field errors also as form errors
@@ -107,6 +110,8 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 			$formEl = $form->getElementPrototype();
 			if (!($classes = self::getClasses($formEl)) || stripos($classes, 'form-') === FALSE) {
 				$formEl->addClass('form-horizontal');
+                $this->horizontalMode = TRUE;
+                $this->template->labelCols = $this->labelColumns;
 			}
 
 		} elseif ($mode === 'begin') {
@@ -566,6 +571,14 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 
 		return $items;
 	}
+
+    public function isHorizontalMode() {
+        return $this->horizontalMode;
+    }
+
+    public function getLabelColumns() {
+        return $this->labelColumns;
+    }
 
 
 

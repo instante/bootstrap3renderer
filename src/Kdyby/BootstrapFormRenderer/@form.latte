@@ -7,6 +7,14 @@
 </div>
 {/block}
 {block #body}
+{dump}
+{if $renderer->horizontalMode}
+    {var $inputCols = 12-$renderer->labelColumns}
+    {var $labelClass = 'col-sm-' . $renderer->labelColumns}
+    {var $inputClass = 'col-sm-' . $inputCols}
+    {var $skipClass = 'col-sm-offset-' . $renderer->labelColumns}
+{/if}
+
 {* controls with group *}
 {foreach $renderer->findGroups() as $group}{block #group}
 
@@ -22,12 +30,16 @@
             {block #controls}
             {foreach $controls as $control}
             {if $renderer->isSubmitButton($control)}
-                {if $iterator->first}{='<div class="form-actions">'|noescape}{/if}
+                {if $iterator->first}<div class="form-group"><div class="form-actions{ifset $skipClass} {$skipClass} {$inputClass}{/ifset}">{/if}
                 {input $renderer->getControlName($control)}
-                {if !$renderer->isSubmitButton($iterator->nextValue)}{="</div>"|noescape}{/if}
+                {if !$renderer->isSubmitButton($iterator->nextValue)}</div></div>{/if}
                 {?continue}
             {/if}
-			{var $attrs = ['input' => [], 'label' => []]}
+            {if $renderer->horizontalMode}
+                {var $attrs = ['input' => [], 'label' => ['class' => $labelClass]]}
+            {else}
+                {var $attrs = ['input' => [], 'label' => []]}
+            {/if}
 
             {block #control}
             <div{$control->getOption('pairContainer')->attributes()|noescape} n:tag-if="$control->getOption('pairContainer')">
@@ -51,7 +63,7 @@
                 {elseif $renderer->isCheckbox($control)}
 
 					{var $label = $renderer::mergeAttrs($form[$name]->getLabel(), $attrs['label'])}
-                    <div class="checkbox" n:tag-if="!$renderer->controlHasClass($control, 'inline')">
+                    <div class="checkbox{ifset $skipClass} {$skipClass} {$inputClass}{/ifset}" n:tag-if="!$renderer->controlHasClass($control, 'inline')">
                         {$label->startTag()|noescape}{$renderer::mergeAttrs($form[$name]->getControl(), $attrs['input'])}{$renderer->getLabelBody($control)}{$label->endTag()|noescape}{$error}{$description}
                     </div>
 
@@ -77,10 +89,13 @@
                     {$renderer::mergeAttrs($form[$name]->getLabel(), $attrs['label'])}
 
                     {var $prepend = $control->getOption('input-prepend'), $append = $control->getOption('input-append')}
-                    <div class="input-group" n:tag-if="$prepend || $append">
-                        <div class="input-group-addon" n:tag-if="$prepend">{$prepend}</div>
-                        {$renderer::mergeAttrs($form[$name]->getControl(), $attrs['input'])}
-                        <div class="input-group-addon" n:tag-if="$append">{$append}</div>
+                    <div class="{$inputClass}" n:tag-if="isset($inputClass)">
+                        <div class="input-group" n:tag-if="$prepend || $append">
+                        
+                            <div class="input-group-addon" n:tag-if="$prepend">{$prepend}</div>
+                            {$renderer::mergeAttrs($form[$name]->getControl(), $attrs['input'])}
+                            <div class="input-group-addon" n:tag-if="$append">{$append}</div>
+                        </div>
                     </div>
                     {$error}{$description}
 
@@ -88,7 +103,7 @@
             </div>
             {/block}
 
-            {if $renderer->isSubmitButton($iterator->nextValue)}{='<div class="form-actions">'|noescape}{/if}
+            {if $renderer->isSubmitButton($iterator->nextValue)}<div class="form-group"><div class="form-actions{ifset $skipClass} {$skipClass} {$inputClass}{/ifset}">{/if}
             {/foreach}
             {/block}
 
