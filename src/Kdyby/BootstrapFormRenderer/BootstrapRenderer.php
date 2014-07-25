@@ -560,7 +560,6 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 				}
 			}
 			$check->html = clone $check->label;
-			$check->html->addClass('checkbox');
 			$display = $control->getOption('display', 'inline');
 			if ($display == 'inline') {
 				$check->html->addClass($display);
