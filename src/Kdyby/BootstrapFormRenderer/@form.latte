@@ -72,9 +72,13 @@
 
                     {$renderer::mergeAttrs($form[$name]->getLabel()->addClass("control-label"), $attrs['label'])}
 
+                    <div class="{$inputClass}" n:tag-if="isset($inputClass)">
                     {foreach $renderer->getRadioListItems($control) as $item}
+                        <div class="radio">
                         {$renderer::mergeAttrs($item->html, $attrs['input'])}
+                        </div>
                     {/foreach}{$error}{$description}
+                    </div>
 
                 {elseif $renderer->isCheckboxList($control)}
 
@@ -97,9 +101,8 @@
                             {$renderer::mergeAttrs($form[$name]->getControl(), $attrs['input'])}
                             <div class="input-group-addon" n:tag-if="$append">{$append}</div>
                         </div>
+                        {$error}{$description}
                     </div>
-                    {$error}{$description}
-
                 {/if}
             </div>
             {/block}
