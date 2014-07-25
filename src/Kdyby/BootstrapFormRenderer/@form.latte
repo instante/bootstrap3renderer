@@ -2,7 +2,7 @@
 {form $form}
 {block #errors}
 
-<div n:foreach="$renderer->findErrors() as $error" class="alert alert-error">
+<div n:foreach="$renderer->findErrors() as $error" class="alert alert-danger">
     <a class="close" data-dismiss="alert">×</a>{$error}
 </div>
 {/block}
@@ -57,8 +57,9 @@
                     {$renderer::mergeAttrs($form[$name]->getControl(), $attrs['input'])}
 
                 {elseif $renderer->isButton($control)}
-
-                    {$renderer::mergeAttrs($form[$name]->getControl(), $attrs['input'])}{$error}{$description}
+                    <div class="{$skipClass} {$inputClass}" n:tag-if="isset($inputClass)">
+                        {$renderer::mergeAttrs($form[$name]->getControl(), $attrs['input'])}{$error}{$description}
+                    </div>
 
                 {elseif $renderer->isCheckbox($control)}
 
