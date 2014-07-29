@@ -3,17 +3,17 @@
 /**
  * Test: Kdyby\BootstrapFormRenderer\BootstrapRenderer.
  *
- * @testCase KdybyTests\BootstrapFormRenderer\BootstrapRendererTest
+ * @testCase InstanteTests\Boostrap3Renderer\BootstrapRendererTest
  * @author Filip Procházka <filip@prochazka.su>
- * @package Kdyby\BootstrapFormRenderer
+ * @package InstanteTests\FormRenderer
  */
 
-namespace KdybyTests\FormRenderer;
+namespace InstanteTests\Boostrap3Renderer;
 
-use Kdyby;
-use Kdyby\BootstrapFormRenderer;
-use Kdyby\BootstrapFormRenderer\BootstrapRenderer;
-use Kdyby\BootstrapFormRenderer\DI\RendererExtension;
+use Instante\Bootstrap3Renderer\BootstrapRenderer;
+use Instante\Bootstrap3Renderer\DI\RendererExtension;
+use Instante\Bootstrap3Renderer\Latte;
+
 use Nette;
 use Nette\Application\UI\Form;
 use Nette\Caching\Storages\PhpFileStorage;

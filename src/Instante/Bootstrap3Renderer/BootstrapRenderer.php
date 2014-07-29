@@ -19,7 +19,7 @@ if (!class_exists('Nette\Bridges\FormsLatte\FormMacros')) {
  * Created with twitter bootstrap in mind.
  *
  * <code>
- * $form->setRenderer(new Kdyby\BootstrapFormRenderer\BootstrapRenderer);
+ * $form->setRenderer(new Instante\Bootstrap3Renderer\BootstrapRenderer);
  * </code>
  *
  * @author Pavel Ptacek
