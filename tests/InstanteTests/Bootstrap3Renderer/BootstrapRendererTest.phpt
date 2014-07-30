@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Test: Kdyby\BootstrapFormRenderer\BootstrapRenderer.
+ * Test: Instante\Bootstrap3Renderer\BootstrapRenderer.
  *
  * @testCase InstanteTests\Boostrap3Renderer\BootstrapRendererTest
  * @author Filip Procházka <filip@prochazka.su>
