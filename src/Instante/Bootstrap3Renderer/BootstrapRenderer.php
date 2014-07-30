@@ -153,8 +153,8 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 			FormMacros::renderFormEnd($this->form);
 
 		} else {
-
 			$attrs = array('input' => array(), 'label' => array());
+            
 			foreach ((array) $args as $key => $val) {
 				if (stripos($key, 'input-') === 0) {
 					$attrs['input'][substr($key, 6)] = $val;
@@ -163,6 +163,14 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 					$attrs['label'][substr($key, 6)] = $val;
 				}
 			}
+
+            if($this->horizontalMode) {
+                if(isset($attrs['label']['class'])) {
+                    $attrs['label']['class'] .= ' ' . $this->columnClassPrefix . $this->labelColumns;
+                } else {
+                    $attrs['label']['class'] = $this->columnClassPrefix . $this->labelColumns;
+                }
+            }
 
 			$this->template->setFile(__DIR__ . '/@parts.latte');
 			$this->template->mode = $mode;
