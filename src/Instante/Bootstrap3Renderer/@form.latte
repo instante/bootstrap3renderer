@@ -7,13 +7,6 @@
 </div>
 {/block}
 {block #body}
-{dump}
-{if $renderer->horizontalMode}
-    {var $inputCols = 12-$renderer->labelColumns}
-    {var $labelClass = 'col-sm-' . $renderer->labelColumns}
-    {var $inputClass = 'col-sm-' . $inputCols}
-    {var $skipClass = 'col-sm-offset-' . $renderer->labelColumns}
-{/if}
 
 {* controls with group *}
 {foreach $renderer->findGroups() as $group}{block #group}

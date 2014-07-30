@@ -37,6 +37,12 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
     /** @var int */
     private $labelColumns = 2;
 
+    /** @var int */
+    private $inputColumns = 10;
+
+    /** @var string */
+    private $columnClassPrefix = 'col-sm-';
+
     /** @var boolean */
     private $horizontalMode = FALSE;
 
@@ -111,7 +117,6 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 			if (!($classes = self::getClasses($formEl)) || stripos($classes, 'form-') === FALSE) {
 				$formEl->addClass('form-horizontal');
                 $this->horizontalMode = TRUE;
-                $this->template->labelCols = $this->labelColumns;
 			}
 
 		} elseif ($mode === 'begin') {
@@ -126,6 +131,14 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 			array_fill_keys(array('control', '_control', 'presenter', '_presenter'), NULL) +
 			array('_form' => $this->form, 'form' => $this->form, 'renderer' => $this)
 		);
+
+        if($this->horizontalMode) {
+            $this->template->labelCols = $this->labelColumns;
+            $this->template->inputCols = $this->inputColumns;
+            $this->template->labelClass = $this->columnClassPrefix . $this->labelColumns;
+            $this->template->inputClass = $this->columnClassPrefix . $this->inputColumns;
+            $this->template->skipClass = $this->columnClassPrefix . 'offset-' . $this->labelColumns;
+        }
 
 		if ($mode === NULL) {
 			if ($args) {
@@ -576,6 +589,14 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 
     public function getLabelColumns() {
         return $this->labelColumns;
+    }
+
+    public function getInputColumns() {
+        return $this->inputColumns;
+    }
+
+    public function getColumnClassPrefix() {
+        return $this->columnClassPrefix;
     }
 
 
