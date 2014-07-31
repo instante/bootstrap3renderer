@@ -591,20 +591,18 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 		return $items;
 	}
 
-    public function isHorizontalMode() {
-        return $this->horizontalMode;
-    }
-
-    public function getLabelColumns() {
-        return $this->labelColumns;
-    }
-
-    public function getInputColumns() {
-        return $this->inputColumns;
-    }
-
+    /**
+     * @return string
+     */
     public function getColumnClassPrefix() {
         return $this->columnClassPrefix;
+    }
+
+    /**
+     * @param string $prefix
+     */
+    public function setColumnClassPrefix($prefix) {
+        $this->columnClassPrefix = $prefix;
     }
 
 
@@ -664,4 +662,40 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 		return $el->class;
 	}
 
+
+
+    /**
+     * @return bool
+     */
+    public function isHorizontalMode() {
+        return $this->horizontalMode;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLabelColumns() {
+        return $this->labelColumns;
+    }
+
+    /**
+     * @param int $cols
+     */
+    public function setLabelColumns($cols) {
+        $this->labelColumns = (int)$cols;
+    }
+
+    /**
+     * @return int
+     */
+    public function getInputColumns() {
+        return $this->inputColumns;
+    }
+
+    /**
+     * @param int $cols
+     */
+    public function setInputColumns($cols) {
+        $this->inputColumns = (int)$cols;
+    }
 }
