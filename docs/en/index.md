@@ -1,14 +1,15 @@
 #
 !! THIS DOCUMENT IS OUTDATED, NEEDS REVISION FOR INSTANTE BS3 RENDERER
 
-Kdyby/BootstrapRenderer [![Build Status](https://secure.travis-ci.org/Kdyby/Framework.png?branch=master)](http://travis-ci.org/Kdyby/Framework)
+Instante/Bootstrap3Renderer/BootstrapRenderer
 
-Forms Renderer for Nette Framework, that allows partial rendering and uses [Twitter Bootstrap markup and classes](http://twitter.github.com/bootstrap/base-css.html#forms).
+Forms Renderer for Nette Framework that allows partial rendering and uses [Twitter Bootstrap markup and classes](http://getbootstrap.com/css/#forms).
+Based on Kdyby/BoostrapRenderer
 
 
 ## Requirements
 
-Kdyby/BootstrapRenderer requires PHP 5.3.2 or higher.
+Instante/Bootstrap3Renderer/BootstrapRenderer requires PHP 5.3.2 or higher.
 
 - [Nette Framework 2.0.x](https://github.com/nette/nette)
 
@@ -21,36 +22,36 @@ Kdyby/BootstrapRenderer requires PHP 5.3.2 or higher.
 
 ## Macros
 
-If you wanna use the special macros, you have to register them into Latte Engine
+If you want to use the special macros, you have to register them into the Latte Engine:
 
 ```php
-Kdyby\BootstrapFormRenderer\Latte\FormMacros::install($engine->compiler);
+Instante\Bootstrap3Renderer\Latte\FormMacros::install($engine->compiler);
 ```
 
-Or simply register the extension in `app/bootstrap.php` to allow them globally
+Or simply register the extension in `app/bootstrap.php` to allow them globally:
 
 ```php
-Kdyby\BootstrapFormRenderer\DI\RendererExtension::register($configurator);
+Instante\Bootstrap3Renderer\DI\RendererExtension::register($configurator);
 ```
 
 
 ## Usage
 
-First you have to register the renderer to form.
+First you have to register the renderer to the form.
 
 ```php
-use Kdyby\Extension\Forms\BootstrapRenderer\BootstrapRenderer;
+use Instante/Bootstrap3Renderer/BootstrapRenderer;
 $form->setRenderer(new BootstrapRenderer);
 ```
 
-For performance optimizations, you can provider your own template instance.
+You can provide your own template instance (for performance optimizations):
 
 ```php
 // $this instanceof Nette\Application\UI\Presenter
 $form->setRenderer(new BootstrapRenderer($this->createTemplate()));
 ```
 
-All the usage cases expects you to have the form component in variable named <code>$form</code>
+All the usage cases expect you to have the form component in a variable named <code>$form</code>
 
 
 
@@ -70,7 +71,7 @@ Beginning of the form
 
 Errors
 
-> Renders only errors, that have not associated form element.
+> Renders only errors that have no associated form element.
 
 ```smarty
 {$form->render('errors')} or {form errors}
@@ -78,7 +79,7 @@ Errors
 
 Body
 
-> Renders all controls and groups, that are not yet rendered.
+> Renders all controls and groups that are not rendered yet.
 
 ```smarty
 {$form->render('body')} or {form body}
@@ -86,7 +87,7 @@ Body
 
 Controls
 
-> Renders all controls, that are not yet rendered. Doesn't render buttons.
+> Renders all controls that are not rendered yet. Doesn't render buttons.
 
 ```smarty
 {$form->render('controls')} or {form controls}
@@ -94,7 +95,7 @@ Controls
 
 Buttons
 
-> Renders all buttons, that are not yet rendered.
+> Renders all buttons that are not rendered yet.
 
 ```smarty
 {$form->render('buttons')} or {form buttons}
@@ -102,7 +103,7 @@ Buttons
 
 End
 
-> Renders all hidden inputs, and then the closing tag of form.
+> Renders all hidden inputs and a closing tag of the form.
 
 ```smarty
 {$form->render('end')} or {/form}
@@ -121,7 +122,7 @@ Control
 
 Container
 
-> Renders all the inputs in container, that are not yet rendered.
+> Renders all inputs in a container that are not rendered yet.
 
 ```smarty
 {$form->render($form['container-name'])} or {container container-name}
@@ -129,7 +130,7 @@ Container
 
 Group
 
-> Renders fieldset, legend and all the controls in group, that are not yet rendered.
+> Renders fieldset, legend and all controls in a group that are not rendered yet.
 
 ```smarty
 {$form->render($form->getGroup('Group name'))} or {group "Group name"}
