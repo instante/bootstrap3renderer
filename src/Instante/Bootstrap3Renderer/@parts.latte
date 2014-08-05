@@ -1,0 +1,26 @@
+{includeblock "@form.latte"}
+
+{if $mode === "errors"}
+    {include #errors, renderer => $renderer}
+
+{elseif $mode === "body"}
+    {include #body, renderer => $renderer}
+
+{elseif $mode === "controls"}
+    {include #controls, controls => $renderer->findControls(NULL, FALSE)}
+
+{elseif $mode === "buttons"}
+    {include #controls, controls => $renderer->findControls(NULL, TRUE)}
+
+{elseif $mode instanceof \Nette\Forms\Container}
+    {include #controls, renderer => $renderer, controls => $renderer->findControls($mode)}
+
+{elseif $mode instanceof \Nette\Forms\ControlGroup}
+    {if $mode->controls}
+        {include #group, renderer => $renderer, group => $renderer->processGroup($mode)}
+    {/if}
+
+{elseif $mode instanceof \Nette\Forms\IControl}
+    {include #control, renderer => $renderer, control => $mode, attrs => $attrs}
+
+{/if}

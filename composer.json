@@ -5,7 +5,7 @@
 	"keywords": ["nette", "forms", "bootstrap", "bootstrap3"],
 	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
 	"require": {
-		"nette/nette": "~2.1@dev"
+		"nette/nette": "2.1.*"
 	},
 	"require-dev": {
 		"nette/tester": "@dev",
