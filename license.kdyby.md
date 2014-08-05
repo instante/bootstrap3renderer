@@ -1,19 +1,23 @@
 Licenses
 ========
 
-Instante and this component are triple-licensed under New BSD license,
-GNU GPL 2 and GNU GPL 3. You may freely choose which license fits better
-for your use.
+Good news! You may use Kdyby Framework under the terms of either
+the New BSD License or the GNU General Public License (GPL) version 2 or 3.
 
-Instante bootstrap 3 renderer is based on Kdyby bootstrap form renderer
-also triple-licensed with New BSD, GPL 2 and 3.
-You may find its original license in license.kdyby.md located in the same
-directory as this file.
+The BSD License is recommended for most projects. It is easy to understand and it
+places almost no restrictions on what you can do with the framework. If the GPL
+fits better to your project, you can use the framework under this license.
+
+You don't have to notify anyone which license you are using. You can freely
+use Kdyby Framework in commercial projects as long as the copyright header
+remains intact.
+
+
 
 New BSD License
 ---------------
 
-Copyright (c) 2014 Mistylab
+Copyright (c) 2008 Filip Procházka (http://filip-prochazka.com)
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -26,7 +30,7 @@ are permitted provided that the following conditions are met:
 	this list of conditions and the following disclaimer in the documentation
 	and/or other materials provided with the distribution.
 
-	* Neither the name of "Instante" nor the names of its contributors
+	* Neither the name of "Kdyby Framework" nor the names of its contributors
 	may be used to endorse or promote products derived from this software
 	without specific prior written permission.
 
