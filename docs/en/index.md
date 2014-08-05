@@ -135,9 +135,3 @@ Group
 ```smarty
 {$form->render($form->getGroup('Group name'))} or {group "Group name"}
 ```
-
-
------
-
-Kdyby Framework: homepage [http://www.kdyby.org](http://www.kdyby.org) and repository [http://github.com/kdyby/framework](http://github.com/kdyby/framework).
-Sandbox, pre-packaged and configured project: [http://github.com/kdyby/sandbox](http://github.com/kdyby/sandbox)
