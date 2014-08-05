@@ -249,7 +249,7 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 	 */
 	public function findErrors()
 	{
-		$formErrors = $this->form->getErrors();
+		$formErrors = $this->errorsAtInputs ? $this->form->getOwnErrors() : $this->form->getErrors();
 
 		if (!$formErrors) {
 			return array();
@@ -266,11 +266,7 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 			return $errors;
 		};
 
-		if (!$this->errorsAtInputs) {
-			return $translate($formErrors);
-		}
-
-		return $translate($this->form->getErrors());
+		return $translate($formErrors);
 	}
 
 
