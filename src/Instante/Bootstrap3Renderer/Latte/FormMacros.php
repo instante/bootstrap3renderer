@@ -1,6 +1,7 @@
 <?php
 
 namespace Instante\Bootstrap3Renderer\Latte;
+
 use Instante\Bootstrap3Renderer\BootstrapRenderer;
 use Nette;
 use Nette\Forms\Form;
@@ -9,11 +10,9 @@ use Nette\Latte\MacroNode;
 use Nette\Latte\PhpWriter;
 use Nette\Reflection\ClassType;
 
-
 if (!class_exists('Nette\Bridges\FormsLatte\FormMacros')) {
-	class_alias('Nette\Latte\Macros\FormMacros', 'Nette\Bridges\FormsLatte\FormMacros');
+    class_alias('Nette\Latte\Macros\FormMacros', 'Nette\Bridges\FormsLatte\FormMacros');
 }
-
 
 /**
  * Standard macros:
@@ -47,181 +46,143 @@ if (!class_exists('Nette\Bridges\FormsLatte\FormMacros')) {
  *
  * @author Filip Procházka <filip@prochazka.su>
  */
-class FormMacros extends Latte\Macros\MacroSet
-{
+class FormMacros extends Latte\Macros\MacroSet {
 
-	/**
-	 * @param \Nette\Latte\Compiler $compiler
-	 * @return \Nette\Latte\Macros\MacroSet|void
-	 */
-	public static function install(Latte\Compiler $compiler)
-	{
-		$me = new static($compiler);
-		$me->addMacro('form', array($me, 'macroFormBegin'), array($me, 'macroFormEnd'));
-		$me->addMacro('pair', array($me, 'macroPair'));
-		$me->addMacro('group', array($me, 'macroGroup'));
-		$me->addMacro('container', array($me, 'macroContainer'));
-		return $me;
-	}
+    /**
+     * @param \Nette\Latte\Compiler $compiler
+     * @return \Nette\Latte\Macros\MacroSet|void
+     */
+    public static function install(Latte\Compiler $compiler) {
+        $me = new static($compiler);
+        $me->addMacro('form', array($me, 'macroFormBegin'), array($me, 'macroFormEnd'));
+        $me->addMacro('pair', array($me, 'macroPair'));
+        $me->addMacro('group', array($me, 'macroGroup'));
+        $me->addMacro('container', array($me, 'macroContainer'));
+        return $me;
+    }
 
+    /**
+     * @return Latte\Token
+     */
+    private function findCurrentToken() {
+        static $positionRef, $tokensRef;
 
+        if (!property_exists('Nette\Latte\Token', 'empty')) {
+            return NULL;
+        }
 
-	/**
-	 * @return Latte\Token
-	 */
-	private function findCurrentToken()
-	{
-		static $positionRef, $tokensRef;
+        if (empty($positionRef)) {
+            $compilerRef = ClassType::from($this->getCompiler());
+            $positionRef = $compilerRef->getProperty('position');
+            $positionRef->setAccessible(TRUE);
+            $tokensRef = $compilerRef->getProperty('tokens');
+            $tokensRef->setAccessible(TRUE);
+        }
 
-		if (!property_exists('Nette\Latte\Token', 'empty')) {
-			return NULL;
-		}
+        $tokens = $tokensRef->getValue($this->getCompiler());
+        return $tokens[$positionRef->getValue($this->getCompiler())];
+    }
 
-		if (empty($positionRef)) {
-			$compilerRef = ClassType::from($this->getCompiler());
-			$positionRef = $compilerRef->getProperty('position');
-			$positionRef->setAccessible(TRUE);
-			$tokensRef = $compilerRef->getProperty('tokens');
-			$tokensRef->setAccessible(TRUE);
-		}
+    /**
+     * @param \Nette\Latte\MacroNode $node
+     * @param \Nette\Latte\PhpWriter $writer
+     * @return string
+     */
+    public function macroFormBegin(MacroNode $node, PhpWriter $writer) {
+        if ($node->isEmpty = (substr($node->args, -1) === '/')) {
+            $node->setArgs(substr($node->args, 0, -1));
 
-		$tokens = $tokensRef->getValue($this->getCompiler());
-		return $tokens[$positionRef->getValue($this->getCompiler())];
-	}
+            return $writer->write('$form = $__form = $_form = (is_object(%node.word) ? %node.word : $_control->getComponent(%node.word)); $__form->render(NULL, %node.array);');
+        } elseif (($token = $this->findCurrentToken()) && $token->empty) {
+            // $node->isEmpty = TRUE;
+            return $writer->write('$form = $__form = $_form = (is_object(%node.word) ? %node.word : $_control->getComponent(%node.word)); $__form->render(NULL, %node.array);');
+        }
 
+        $word = $node->tokenizer->fetchWord();
+        $node->isEmpty = in_array($word, array('errors', 'body', 'controls', 'buttons'));
+        $node->tokenizer->reset();
 
+        return $writer->write('$form = $__form = $_form = ' . get_called_class() . '::renderFormPart(%node.word, %node.array, get_defined_vars())');
+    }
 
-	/**
-	 * @param \Nette\Latte\MacroNode $node
-	 * @param \Nette\Latte\PhpWriter $writer
-	 * @return string
-	 */
-	public function macroFormBegin(MacroNode $node, PhpWriter $writer)
-	{
-		if ($node->isEmpty = (substr($node->args, -1) === '/')) {
-			$node->setArgs(substr($node->args, 0, -1));
+    /**
+     * @param \Nette\Latte\MacroNode $node
+     * @param \Nette\Latte\PhpWriter $writer
+     */
+    public function macroFormEnd(MacroNode $node, PhpWriter $writer) {
+        if (($token = $this->findCurrentToken()) && $token->empty) {
+            return '';
+        }
 
-			return $writer->write('$form = $__form = $_form = (is_object(%node.word) ? %node.word : $_control->getComponent(%node.word)); $__form->render(NULL, %node.array);');
+        return $writer->write('Nette\Bridges\FormsLatte\FormMacros::renderFormEnd($__form)');
+    }
 
-		} elseif (($token = $this->findCurrentToken()) && $token->empty) {
-			// $node->isEmpty = TRUE;
-			return $writer->write('$form = $__form = $_form = (is_object(%node.word) ? %node.word : $_control->getComponent(%node.word)); $__form->render(NULL, %node.array);');
-		}
+    /**
+     * @param \Nette\Latte\MacroNode $node
+     * @param \Nette\Latte\PhpWriter $writer
+     */
+    public function macroPair(MacroNode $node, PhpWriter $writer) {
+        return $writer->write('$__form->render($__form[%node.word], %node.array)');
+    }
 
-		$word = $node->tokenizer->fetchWord();
-		$node->isEmpty = in_array($word, array('errors', 'body', 'controls', 'buttons'));
-		$node->tokenizer->reset();
+    /**
+     * @param \Nette\Latte\MacroNode $node
+     * @param \Nette\Latte\PhpWriter $writer
+     */
+    public function macroGroup(MacroNode $node, PhpWriter $writer) {
+        return $writer->write('$__form->render(is_object(%node.word) ? %node.word : $__form->getGroup(%node.word))');
+    }
 
-		return $writer->write('$form = $__form = $_form = ' . get_called_class() . '::renderFormPart(%node.word, %node.array, get_defined_vars())');
-	}
+    /**
+     * @param \Nette\Latte\MacroNode $node
+     * @param \Nette\Latte\PhpWriter $writer
+     */
+    public function macroContainer(MacroNode $node, PhpWriter $writer) {
+        return $writer->write('$__form->render($__form[%node.word], %node.array)');
+    }
 
+    /**
+     * @param string $mode
+     * @param array $args
+     * @param array $scope
+     * @throws \Nette\InvalidStateException
+     * @return \Nette\Forms\Form
+     */
+    public static function renderFormPart($mode, array $args, array $scope) {
+        if ($mode instanceof Form) {
+            self::renderFormBegin($mode, $args);
+            return $mode;
+        } elseif (($control = self::scopeVar($scope, 'control')) && ($form = $control->getComponent($mode, FALSE)) instanceof Form) {
+            self::renderFormBegin($form, $args);
+            return $form;
+        } elseif (($form = self::scopeVar($scope, 'form')) instanceof Form) {
+            $form->render($mode, $args);
+        } else {
+            throw new Nette\InvalidStateException('No instanceof Nette\Forms\Form found in local scope.');
+        }
 
+        return $form;
+    }
 
-	/**
-	 * @param \Nette\Latte\MacroNode $node
-	 * @param \Nette\Latte\PhpWriter $writer
-	 */
-	public function macroFormEnd(MacroNode $node, PhpWriter $writer)
-	{
-		if (($token = $this->findCurrentToken()) && $token->empty) {
-			return '';
-		}
+    /**
+     * @param Form $form
+     * @param array $args
+     */
+    private static function renderFormBegin(Form $form, array $args) {
+        if ($form->getRenderer() instanceof BootstrapRenderer) {
+            $form->render('begin', $args);
+        } else {
+            Nette\Bridges\FormsLatte\FormMacros::renderFormBegin($form, $args);
+        }
+    }
 
-		return $writer->write('Nette\Bridges\FormsLatte\FormMacros::renderFormEnd($__form)');
-	}
-
-
-
-	/**
-	 * @param \Nette\Latte\MacroNode $node
-	 * @param \Nette\Latte\PhpWriter $writer
-	 */
-	public function macroPair(MacroNode $node, PhpWriter $writer)
-	{
-		return $writer->write('$__form->render($__form[%node.word], %node.array)');
-	}
-
-
-
-	/**
-	 * @param \Nette\Latte\MacroNode $node
-	 * @param \Nette\Latte\PhpWriter $writer
-	 */
-	public function macroGroup(MacroNode $node, PhpWriter $writer)
-	{
-		return $writer->write('$__form->render(is_object(%node.word) ? %node.word : $__form->getGroup(%node.word))');
-	}
-
-
-
-	/**
-	 * @param \Nette\Latte\MacroNode $node
-	 * @param \Nette\Latte\PhpWriter $writer
-	 */
-	public function macroContainer(MacroNode $node, PhpWriter $writer)
-	{
-		return $writer->write('$__form->render($__form[%node.word], %node.array)');
-	}
-
-
-
-	/**
-	 * @param string $mode
-	 * @param array $args
-	 * @param array $scope
-	 * @throws \Nette\InvalidStateException
-	 * @return \Nette\Forms\Form
-	 */
-	public static function renderFormPart($mode, array $args, array $scope)
-	{
-		if ($mode instanceof Form) {
-			self::renderFormBegin($mode, $args);
-			return $mode;
-
-		} elseif (($control = self::scopeVar($scope, 'control')) && ($form = $control->getComponent($mode, FALSE)) instanceof Form) {
-			self::renderFormBegin($form, $args);
-			return $form;
-
-		} elseif (($form = self::scopeVar($scope, 'form')) instanceof Form) {
-			$form->render($mode, $args);
-
-		} else {
-			throw new Nette\InvalidStateException('No instanceof Nette\Forms\Form found in local scope.');
-		}
-
-		return $form;
-	}
-
-
-
-	/**
-	 * @param Form $form
-	 * @param array $args
-	 */
-	private static function renderFormBegin(Form $form, array $args)
-	{
-		if ($form->getRenderer() instanceof BootstrapRenderer) {
-			$form->render('begin', $args);
-
-		} else {
-			Nette\Bridges\FormsLatte\FormMacros::renderFormBegin($form, $args);
-		}
-	}
-
-
-
-	/**
-	 * @param array $scope
-	 * @param string $var
-	 * @return mixed|NULL
-	 */
-	private static function scopeVar(array $scope, $var)
-	{
-		return isset($scope['__' . $var])
-			? $scope['__' . $var]
-			: (isset($scope['_' . $var])
-				? $scope['_' . $var]
-				: (isset($scope[$var]) ? $scope[$var] : NULL));
-	}
+    /**
+     * @param array $scope
+     * @param string $var
+     * @return mixed|NULL
+     */
+    private static function scopeVar(array $scope, $var) {
+        return isset($scope['__' . $var]) ? $scope['__' . $var] : (isset($scope['_' . $var]) ? $scope['_' . $var] : (isset($scope[$var]) ? $scope[$var] : NULL));
+    }
 
 }
