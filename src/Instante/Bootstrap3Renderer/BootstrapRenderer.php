@@ -31,6 +31,11 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
         'Kdyby\Forms\Controls\CheckboxList',
     );
 
+    public static $textBaseClasses = array(
+        'Nette\Forms\Controls\TextBase',
+        'Vodacek\Forms\Controls\DateInput',
+    );
+
     /** @var int */
     private $labelColumns = 2;
 
@@ -199,12 +204,13 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
                 $el->addClass('btn-default');
             }
         } else {
-            if ($control instanceof Controls\TextBase || $control instanceof Controls\SelectBox) {
+            
+            if (static::isTextBase($control) || $control instanceof Controls\SelectBox) {
                 $el->addClass('form-control');
             }
 
             $label = $control->labelPrototype;
-            if (!$control instanceof Controls\Checkbox && !$control instanceof Controls\RadioList && !self::isCheckboxList($control)) {
+            if (!$control instanceof Controls\Checkbox && !$control instanceof Controls\RadioList && !static::isCheckboxList($control)) {
                 $label->addClass('control-label');
             }
 
@@ -431,12 +437,27 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
     }
 
     /**
-     *  @internal
+     * @internal
      * @param \Nette\Forms\IControl $control
      * @return bool
      */
     public static function isCheckboxList(Nette\Forms\IControl $control) {
         foreach (static::$checkboxListClasses as $class) {
+            if (class_exists($class, FALSE) && $control instanceof $class) {
+                return TRUE;
+            }
+        }
+
+        return FALSE;
+    }
+
+    /**
+     * @internal
+     * @param \Nette\Forms\IControl $control
+     * @return bool
+     */
+    public static function isTextBase(Nette\Forms\IControl $control) {
+        foreach (static::$textBaseClasses as $class) {
             if (class_exists($class, FALSE) && $control instanceof $class) {
                 return TRUE;
             }
