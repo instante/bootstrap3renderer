@@ -22,6 +22,8 @@ if (!class_exists('Nette\Bridges\FormsLatte\FormMacros')) {
  *
  * @author Pavel Ptacek
  * @author Filip Procházka
+ * @author Richard Ejem
+ * @author Ondrej Hubsch
  */
 class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRenderer {
 

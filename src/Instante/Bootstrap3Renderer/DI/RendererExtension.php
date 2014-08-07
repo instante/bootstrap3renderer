@@ -18,15 +18,16 @@ if (isset(Nette\Loaders\NetteLoader::getInstance()->renamed['Nette\Configurator'
 
 /**
  * @author Filip Procházka <filip@prochazka.su>
+ * @author Richard Ejem
  */
 class RendererExtension extends Nette\DI\CompilerExtension {
 
     public function loadConfiguration() {
         $builder = $this->getContainerBuilder();
-        $engine = $builder->getDefinition('nette.latte');
 
         $install = 'Instante\Bootstrap3Renderer\Latte\FormMacros::install';
-        $engine->addSetup($install . '(?->getCompiler())', array('@self'));
+        $builder->getDefinition('nette.latteFactory')
+                ->addSetup("?->onCompile[] = function() use (?) { $install(?->getCompiler()); }", array('@self', '@self', '@self'));
     }
 
     /**

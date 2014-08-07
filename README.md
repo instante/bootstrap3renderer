@@ -7,9 +7,10 @@ Based on [http://github.com/kdyby/BootstrapFormRenderer](http://github.com/kdyby
 Requirements
 ------------
 
-- PHP 5.3.2 or higher
+- PHP 5.4 or higher
 
-- [Nette Framework](https://github.com/nette/nette)
+- [Nette Framework](https://github.com/nette/nette) 2.1 (version 2.2 for custom latte macros)
+
 
 
 Installation

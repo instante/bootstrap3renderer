@@ -5,13 +5,21 @@ namespace Instante\Bootstrap3Renderer\Latte;
 use Instante\Bootstrap3Renderer\BootstrapRenderer;
 use Nette;
 use Nette\Forms\Form;
-use Nette\Latte;
-use Nette\Latte\MacroNode;
-use Nette\Latte\PhpWriter;
+use Latte\Compiler;
+use Latte\Macros\MacroSet;
+use Latte\MacroNode;
+use Latte\PhpWriter;
 use Nette\Reflection\ClassType;
+use Nette\Bridges\FormsLatte\FormMacros AS NFormMacros;
 
 if (!class_exists('Nette\Bridges\FormsLatte\FormMacros')) {
     class_alias('Nette\Latte\Macros\FormMacros', 'Nette\Bridges\FormsLatte\FormMacros');
+}
+if (!class_exists('Latte\Compiler')) {
+    class_alias('Nette\Latte\Compiler', 'Latte\Compiler');
+    class_alias('Nette\Latte\Macros\MacroSet', 'Latte\Macros\MacroSet');
+    class_alias('Nette\Latte\MacroNode', 'Latte\MacroNode');
+    class_alias('Nette\Latte\PhpWriter', 'Latte\PhpWriter');
 }
 
 /**
@@ -46,13 +54,13 @@ if (!class_exists('Nette\Bridges\FormsLatte\FormMacros')) {
  *
  * @author Filip Procházka <filip@prochazka.su>
  */
-class FormMacros extends Latte\Macros\MacroSet {
+class FormMacros extends MacroSet {
 
     /**
      * @param \Nette\Latte\Compiler $compiler
      * @return \Nette\Latte\Macros\MacroSet|void
      */
-    public static function install(Latte\Compiler $compiler) {
+    public static function install(Compiler $compiler) {
         $me = new static($compiler);
         $me->addMacro('form', array($me, 'macroFormBegin'), array($me, 'macroFormEnd'));
         $me->addMacro('pair', array($me, 'macroPair'));
@@ -67,7 +75,7 @@ class FormMacros extends Latte\Macros\MacroSet {
     private function findCurrentToken() {
         static $positionRef, $tokensRef;
 
-        if (!property_exists('Nette\Latte\Token', 'empty')) {
+        if (!property_exists('Latte\Token', 'empty')) {
             return NULL;
         }
 
@@ -106,8 +114,8 @@ class FormMacros extends Latte\Macros\MacroSet {
     }
 
     /**
-     * @param \Nette\Latte\MacroNode $node
-     * @param \Nette\Latte\PhpWriter $writer
+     * @param MacroNode $node
+     * @param PhpWriter $writer
      */
     public function macroFormEnd(MacroNode $node, PhpWriter $writer) {
         if (($token = $this->findCurrentToken()) && $token->empty) {
@@ -118,16 +126,16 @@ class FormMacros extends Latte\Macros\MacroSet {
     }
 
     /**
-     * @param \Nette\Latte\MacroNode $node
-     * @param \Nette\Latte\PhpWriter $writer
+     * @param MacroNode $node
+     * @param PhpWriter $writer
      */
     public function macroPair(MacroNode $node, PhpWriter $writer) {
         return $writer->write('$__form->render($__form[%node.word], %node.array)');
     }
 
     /**
-     * @param \Nette\Latte\MacroNode $node
-     * @param \Nette\Latte\PhpWriter $writer
+     * @param MacroNode $node
+     * @param PhpWriter $writer
      */
     public function macroGroup(MacroNode $node, PhpWriter $writer) {
         return $writer->write('$__form->render(is_object(%node.word) ? %node.word : $__form->getGroup(%node.word))');
@@ -172,7 +180,7 @@ class FormMacros extends Latte\Macros\MacroSet {
         if ($form->getRenderer() instanceof BootstrapRenderer) {
             $form->render('begin', $args);
         } else {
-            Nette\Bridges\FormsLatte\FormMacros::renderFormBegin($form, $args);
+            NFormMacros::renderFormBegin($form, $args);
         }
     }
 
