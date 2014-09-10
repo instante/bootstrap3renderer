@@ -550,9 +550,11 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 
     /**
      * @param string $prefix
+     * @return self fluent interface
      */
     public function setColumnClassPrefix($prefix) {
         $this->columnClassPrefix = $prefix;
+        return $this;
     }
 
     /**
@@ -616,9 +618,11 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 
     /**
      * @param int $cols
+     * @return self fluent interface
      */
     public function setLabelColumns($cols) {
         $this->labelColumns = (int) $cols;
+        return $this;
     }
 
     /**
@@ -630,9 +634,11 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 
     /**
      * @param int $cols
+     * @return self fluent interface
      */
     public function setInputColumns($cols) {
         $this->inputColumns = (int) $cols;
+        return $this;
     }
 
 }
