@@ -475,6 +475,9 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
      */
     public static function getRadioListItems(Controls\RadioList $control) {
         $items = array();
+        if (count($control->items) === 0) {
+            $control->getControl(); //sets rendered flag to control if emtpy
+        }
         foreach ($control->items as $key => $value) {
             $el = $control->getControlPart($key);
             if ($el->getName() === 'input') {
@@ -506,6 +509,9 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
      */
     public static function getCheckboxListItems(Controls\BaseControl $control) {
         $items = array();
+        if (count($control->items) === 0) {
+            $control->getControl(); //sets rendered flag to control if emtpy
+        }
         foreach ($control->items as $key => $value) {
             if (method_exists($control, 'getControlPart')) {
                 $el = $control->getControlPart($key);
