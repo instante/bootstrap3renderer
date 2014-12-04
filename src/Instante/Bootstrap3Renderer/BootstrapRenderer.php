@@ -208,7 +208,14 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
         } else {
             
             if (static::isTextBase($control) || $control instanceof Controls\SelectBox) {
-                $el->addClass('form-control');
+                $classes = explode(' ', $control->class);
+                if (($pos = array_search('no-form-control', $classes)) !== FALSE) {
+                    unset($classes[$pos]);
+                    $el->class = implode(' ', $classes);
+                }
+                else {
+                    $el->addClass('form-control');
+                }
             }
 
             $label = $control->labelPrototype;
