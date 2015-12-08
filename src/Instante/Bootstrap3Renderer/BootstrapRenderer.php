@@ -3,10 +3,10 @@
 namespace Instante\Bootstrap3Renderer;
 
 use Nette;
+use Nette\Application\UI\ITemplate;
 use Nette\Forms\Controls;
 use Nette\Iterators\Filter;
 use Nette\Bridges\FormsLatte\FormMacros;
-use Nette\Templating\FileTemplate;
 use Nette\Utils\Html;
 
 if (!class_exists('Nette\Bridges\FormsLatte\FormMacros')) {
@@ -26,6 +26,11 @@ if (!class_exists('Nette\Bridges\FormsLatte\FormMacros')) {
  * @author Ondrej Hubsch
  */
 class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRenderer {
+
+    const MODE_HORIZONTAL = 'form-horizontal';
+    const MODE_VERTICAL = NULL;
+    const MODE_INLINE = 'form-inline';
+    const MODE_NO_CLASS = self::MODE_VERTICAL;
 
     public static $checkboxListClasses = array(
         'Nextras\Forms\Controls\MultiOptionList',
@@ -66,15 +71,18 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
      */
     private $form;
 
+    /** @var string Enumeration of self::MODE_* */
+    private $mode = self::MODE_HORIZONTAL;
+
     /**
      * @var \Nette\Templating\Template|\stdClass
      */
     private $template;
 
     /**
-     * @param \Nette\Templating\FileTemplate $template
+     * @param ITemplate $template
      */
-    public function __construct(FileTemplate $template = NULL) {
+    public function __construct(ITemplate $template = NULL) {
         $this->template = $template;
     }
 
@@ -92,8 +100,7 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
                 /** @var \Nette\Application\UI\Presenter $presenter */
                 $this->template = clone $presenter->getTemplate();
             } else {
-                $this->template = new FileTemplate();
-                $this->template->registerFilter(new Nette\Latte\Engine());
+                $this->template = new Nette\Bridges\ApplicationLatte\Template(new Nette\Latte\Engine);
             }
         }
 
@@ -112,8 +119,10 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 
             $formEl = $form->getElementPrototype();
             if (!($classes = self::getClasses($formEl)) || stripos($classes, 'form-') === FALSE) {
-                $formEl->addClass('form-horizontal');
-                $this->horizontalMode = TRUE;
+                $this->horizontalMode = $this->mode === self::MODE_HORIZONTAL;
+                if ($this->mode !== self::MODE_NO_CLASS) {
+                    $formEl->addClass($this->mode);
+                }
             }
         } elseif ($mode === 'begin') {
             foreach ($this->form->getControls() as $control) {
@@ -206,7 +215,7 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
                 $el->addClass('btn-default');
             }
         } else {
-            
+
             if (static::isTextBase($control) || $control instanceof Controls\SelectBox) {
                 $classes = $control->controlPrototype->class;
                 if (!is_array($classes)) {
@@ -657,4 +666,19 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
         return $this;
     }
 
+    /** @return string */
+    public function getMode()
+    {
+        return $this->mode;
+    }
+
+    /**
+     * @param string $mode
+     * @return $this
+     */
+    public function setMode($mode)
+    {
+        $this->mode = $mode;
+        return $this;
+    }
 }
