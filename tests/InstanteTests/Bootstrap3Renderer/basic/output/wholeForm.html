@@ -1,132 +1,110 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<link href="../../bootstrap.min.css" rel="stylesheet">
+    <link href="../../bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
-	<form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
-		<div class="alert alert-danger">
-			<a class="close" data-dismiss="alert">×</a>General failure!
-		</div>
-		<fieldset>
-                <legend>Skupina</legend>
-                <div id="frm-foo-grouped-name-pair" class="form-group">
-                    <label class="test control-label col-sm-2" for="frm-foo-grouped-name">Jméno</label>
-
-                    <div class="col-sm-10">
-                        <input type="text" name="grouped[name]" class="form-control" id="frm-foo-grouped-name" value="">
-                    </div>
-                </div>
-
-                <div id="frm-foo-grouped-email-pair" class="form-group">
-                    <label class="control-label col-sm-2" for="frm-foo-grouped-email">Email</label>
-
-                    <div class="col-sm-10">
-                        <div class="input-group">
-                            <div class="input-group-addon">@</div>
-                            <input type="email" name="grouped[email]" class="form-control" id="frm-foo-grouped-email" value="">
-                        </div>
-                    </div>
-                </div>
-
-                <div id="frm-foo-grouped-sex-pair" class="form-group">
-                    <label class="control-label col-sm-2" for="frm-foo-grouped-sex">Pohlaví</label>
-
-                    <div class="col-sm-10">
-                        <select name="grouped[sex]" class="form-control" id="frm-foo-grouped-sex"><option value="1">Muž</option><option value="2">Žena</option></select>
-                    </div>
-                </div>
-
-                <div id="frm-foo-grouped-mailing-pair" class="form-group">
-
-
-                    <div class="checkbox col-sm-offset-2 col-sm-10">
-                        <label for="frm-foo-grouped-mailing"><input type="checkbox" name="grouped[mailing]" id="frm-foo-grouped-mailing">Zasílat novinky</label>
-                    </div>
-
-                </div>
-
-                <div id="frm-foo-grouped-add-pair" class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <input type="button" name="grouped[add]" id="frm-foo-grouped-add" value="Přidat">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="form-actions col-sm-offset-2 col-sm-10">
-                        <input type="submit" name="grouped[poke]" class="btn btn-default" id="frm-foo-grouped-poke" value="Šťouchnout">
-
-                        <input type="submit" name="grouped[poke2]" class="btn-success btn btn-default" id="frm-foo-grouped-poke2" value="Ještě Šťouchnout">
-                    </div>
-                </div>
-
-            </fieldset>
-
-            <fieldset>
-                <legend>Other</legend>
-
-                <div id="frm-foo-other-sexy-pair" class="form-group">
-                    <label class="control-label col-sm-2">Sexy</label>
-
-                    <div class="col-sm-10">
-                        <div class="radio">
-                            <label for="frm-foo-other-sexy-1"><input type="radio" name="other[sexy]" id="frm-foo-other-sexy-1" value="1">Ano</label>
-                        </div>
-                        <div class="radio">
-                            <label for="frm-foo-other-sexy-2"><input type="radio" name="other[sexy]" id="frm-foo-other-sexy-2" value="2">Ne</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="frm-foo-other-heslo-pair" class="form-group has-error">
-                    <label class="control-label col-sm-2" for="frm-foo-other-heslo">Heslo</label>
-
-                    <div class="col-sm-10">
-                        <input type="password" name="other[heslo]" class="form-control" id="frm-foo-other-heslo">
-                        <p class="text-danger">chybka!</p>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="form-actions col-sm-offset-2 col-sm-10">
-                        <input type="submit" name="other[pass]" class="btn-warning btn btn-default" id="frm-foo-other-pass" value="Nastavit heslo">
-                    </div>
-                </div>
-
-            </fieldset>
-
-            <div id="frm-foo-photo-pair" class="form-group">
-                <label class="control-label col-sm-2" for="frm-foo-photo">Fotka</label>
-
+    <form action="" method="post" enctype="multipart/form-data" class="form-horizontal">
+        <div class="alert alert-danger">
+            <a class="close" data-dismiss="alert">×</a>General failure!
+        </div>
+        <fieldset>
+            <legend>Skupina</legend>
+            <div id="frm-foo-grouped-name-pair" class="form-group">
+                <label class="test control-label col-sm-2" for="frm-foo-grouped-name">Jméno</label>
                 <div class="col-sm-10">
-                    <input type="file" name="photo" id="frm-foo-photo">
+                    <input type="text" name="grouped[name]" class="form-control" id="frm-foo-grouped-name">
                 </div>
             </div>
-
+            <div id="frm-foo-grouped-email-pair" class="form-group">
+                <label class="control-label col-sm-2" for="frm-foo-grouped-email">Email</label>
+                <div class="col-sm-10">
+                    <div class="input-group">
+                        <div class="input-group-addon">@</div>
+                        <input type="email" name="grouped[email]" class="form-control" id="frm-foo-grouped-email">
+                    </div>
+                </div>
+            </div>
+            <div id="frm-foo-grouped-sex-pair" class="form-group">
+                <label class="control-label col-sm-2" for="frm-foo-grouped-sex">Pohlaví</label>
+                <div class="col-sm-10">
+                    <select name="grouped[sex]" class="form-control" id="frm-foo-grouped-sex">
+                        <option value="1">Muž</option>
+                        <option value="2">Žena</option>
+                    </select>
+                </div>
+            </div>
+            <div id="frm-foo-grouped-mailing-pair" class="form-group">
+                <div class="checkbox col-sm-offset-2 col-sm-10">
+                    <label for="frm-foo-grouped-mailing">
+                        <input type="checkbox" name="grouped[mailing]" id="frm-foo-grouped-mailing">Zasílat novinky</label>
+                </div>
+            </div>
+            <div id="frm-foo-grouped-add-pair" class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <input type="button" name="grouped[add]" id="frm-foo-grouped-add" value="Přidat">
+                </div>
+            </div>
             <div class="form-group">
                 <div class="form-actions col-sm-offset-2 col-sm-10">
-                    <input type="submit" name="up" class="btn btn-default" id="frm-foo-up" value="Nahrát fotku">
+                    <input type="submit" name="grouped[poke]" class="btn btn-default" value="Šťouchnout">
+                    <input type="submit" name="grouped[poke2]" class="btn-success btn btn-default" value="Ještě Šťouchnout">
                 </div>
             </div>
-
-            <div id="frm-foo-desc-pair" class="form-group">
-                <label class="control-label col-sm-2" for="frm-foo-desc">Popis</label>
+        </fieldset>
+        <fieldset>
+            <legend>Other</legend>
+            <div id="frm-foo-other-sexy-pair" class="form-group">
+                <label class="control-label col-sm-2">Sexy</label>
                 <div class="col-sm-10">
-                    <textarea name="desc" class="form-control" id="frm-foo-desc"></textarea>
+                    <div class="radio">
+                        <label for="frm-foo-other-sexy-1">
+                            <input type="radio" name="other[sexy]" id="frm-foo-other-sexy-1" value="1">Ano</label>
+                    </div>
+                    <div class="radio">
+                        <label for="frm-foo-other-sexy-2">
+                            <input type="radio" name="other[sexy]" id="frm-foo-other-sexy-2" value="2">Ne</label>
+                    </div>
                 </div>
             </div>
-
+            <div id="frm-foo-other-heslo-pair" class="form-group has-error">
+                <label class="control-label col-sm-2" for="frm-foo-other-heslo">Heslo</label>
+                <div class="col-sm-10">
+                    <input type="password" name="other[heslo]" class="form-control" id="frm-foo-other-heslo">
+                    <p class="text-danger">chybka!</p>
+                </div>
+            </div>
             <div class="form-group">
                 <div class="form-actions col-sm-offset-2 col-sm-10">
-                    <input type="submit" name="_submit" class="btn-primary btn btn-default" id="frm-foo-submit" value="Uložit">
-                    <input type="submit" name="delete" class="btn btn-default" id="frm-foo-delete" value="Smazat">
+                    <input type="submit" name="other[pass]" class="btn-warning btn btn-default" value="Nastavit heslo">
                 </div>
             </div>
-		<div>
-			<input type="hidden" name="_token_" id="frm-foo-_token_" value="%a%">
-		</div>
-	</form>
+        </fieldset>
+        <div id="frm-foo-photo-pair" class="form-group">
+            <label class="control-label col-sm-2" for="frm-foo-photo">Fotka</label>
+            <div class="col-sm-10">
+                <input type="file" name="photo" id="frm-foo-photo">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-actions col-sm-offset-2 col-sm-10">
+                <input type="submit" name="up" class="btn btn-default" value="Nahrát fotku">
+            </div>
+        </div>
+        <div id="frm-foo-desc-pair" class="form-group">
+            <label class="control-label col-sm-2" for="frm-foo-desc">Popis</label>
+            <div class="col-sm-10"><textarea name="desc" class="form-control" id="frm-foo-desc"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-actions col-sm-offset-2 col-sm-10">
+                <input type="submit" name="_submit" class="btn-primary btn btn-default" value="Uložit">
+                <input type="submit" name="delete" class="btn btn-default" value="Smazat">
+            </div>
+        </div>
+        <input type="hidden" name="_token_" id="frm-foo-_token_" value="%a%">
+    </form>
 </div>
 </body>
 </html>
