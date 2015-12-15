@@ -35,7 +35,10 @@
             {/if}
 
             {block #control}
-            <div{? $_pairCtrl = clone $control->getOption('pairContainer')}{$_pairCtrl->addClass($attrs['pair-class'])->addAttributes($attrs['pair'])->attributes()|noescape} n:tag-if="$control->getOption('pairContainer')">
+            <div{? $_pairCtrl = clone $control->getOption('pairContainer');
+                    if (array_key_exists('pair', $attrs)) $_pairCtrl->addAttributes($attrs['pair']);
+                    if (array_key_exists('pair-class', $attrs)) $_pairCtrl->addClass($attrs['pair-class']);
+                }{$_pairCtrl->attributes()|noescape} n:tag-if="$control->getOption('pairContainer')">
                 {var
                     $name = $renderer->getControlName($control),
                     $description = $renderer->getControlDescription($control),
