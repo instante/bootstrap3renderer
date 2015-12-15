@@ -155,13 +155,15 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
         } elseif ($mode === 'end') {
             FormMacros::renderFormEnd($this->form);
         } else {
-            $attrs = array('input' => array(), 'label' => array());
+            $attrs = array('input' => array(), 'label' => array(), 'pair' => array());
 
             foreach ((array) $args as $key => $val) {
                 if (stripos($key, 'input-') === 0) {
                     $attrs['input'][substr($key, 6)] = $val;
                 } elseif (stripos($key, 'label-') === 0) {
                     $attrs['label'][substr($key, 6)] = $val;
+                } else {
+                    $attrs['pair'][$key] = $val;
                 }
             }
 

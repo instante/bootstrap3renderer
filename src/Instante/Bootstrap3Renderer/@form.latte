@@ -35,7 +35,7 @@
             {/if}
 
             {block #control}
-            <div{$control->getOption('pairContainer')->attributes()|noescape} n:tag-if="$control->getOption('pairContainer')">
+            <div{? $_pairCtrl = clone $control->getOption('pairContainer')}{$_pairCtrl->addAttributes($attrs['pair'])->attributes()|noescape} n:tag-if="$control->getOption('pairContainer')">
                 {var
                     $name = $renderer->getControlName($control),
                     $description = $renderer->getControlDescription($control),
@@ -92,7 +92,7 @@
                     {var $prepend = $control->getOption('input-prepend'), $append = $control->getOption('input-append')}
                     <div class="{$inputClass}" n:tag-if="isset($inputClass)">
                         <div class="input-group" n:tag-if="$prepend || $append">
-                        
+
                             <div class="input-group-addon" n:tag-if="$prepend">{$prepend}</div>
                             {$renderer::mergeAttrs($form[$name]->getControl(), $attrs['input'])}
                             <div class="input-group-addon" n:tag-if="$append">{$append}</div>
