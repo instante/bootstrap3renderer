@@ -234,7 +234,7 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
                 if (($pos = array_search('no-form-control', $classes, TRUE)) !== FALSE) {
                     unset($classes[$pos]);
                     $el->class = $classes;
-                } else {
+                } elseif ($control->getOption('noFormControl', FALSE) !== TRUE) {
                     $el->addClass('form-control');
                 }
             }
