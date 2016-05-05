@@ -5,7 +5,6 @@ namespace Instante\Bootstrap3Renderer;
 use Nette;
 use Nette\Application\UI\ITemplate;
 use Nette\Forms\Controls;
-use Nette\Iterators\Filter;
 use Nette\Bridges\FormsLatte\FormMacros;
 use Nette\Utils\Html;
 
@@ -306,7 +305,7 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
             }
         }
 
-        foreach ($this->form->groups as $group) {
+        foreach ($this->form->getGroups() as $group) {
             if (!in_array($group, $visitedGroups, TRUE) && ($group = $this->processGroup($group))) {
                 $formGroups[] = $group;
             }
@@ -323,7 +322,7 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
     public function findControls(Nette\Forms\Container $container = NULL, $buttons = NULL)
     {
         $container = $container ?: $this->form;
-        return new Filter($container->getControls(), function ($control) use ($buttons) {
+        return new \CallbackFilterIterator($container->getControls(), function ($control) use ($buttons) {
             $control = $control instanceof Filter ? $control->current() : $control;
             $isButton = $control instanceof Controls\Button || $control instanceof Nette\Forms\ISubmitterControl;
             return !$control->getOption('rendered') && !$control instanceof Controls\HiddenField
