@@ -364,4 +364,4 @@ class ArraySessionStorage extends Nette\Object implements Nette\Http\ISessionSto
 }
 
 
-run(new BootstrapRendererTest());
+(new BootstrapRendererTest())->run();
