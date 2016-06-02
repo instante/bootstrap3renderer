@@ -290,7 +290,8 @@ class BootstrapRendererTest extends TestCase
      */
     private function createTemplate()
     {
-        $template = $this->container->getByType('Nette\Application\UI\ITemplateFactory')->createTemplate();
+        $template
+            = $this->container->getByType('Nette\Application\UI\ITemplateFactory')->createTemplate(new ControlMock); //ControlMock needed for Nette <=2.2 compatibility
         return $template;
     }
 
