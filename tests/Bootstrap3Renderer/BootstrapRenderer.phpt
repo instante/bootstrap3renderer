@@ -5,6 +5,7 @@
  *
  * @testCase InstanteTests\Boostrap3Renderer\BootstrapRendererTest
  * @author Filip Procházka <filip@prochazka.su>
+ * @author Instante contributors
  * @package InstanteTests\FormRenderer
  */
 
@@ -16,7 +17,6 @@ use Instante\Bootstrap3Renderer\Latte;
 
 use Nette;
 use Nette\Application\UI\Form;
-use Nette\Caching\Storages\PhpFileStorage;
 use Nette\Configurator;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
@@ -28,6 +28,7 @@ require_once __DIR__ . '/../bootstrap.php';
 
 /**
  * @author Filip Procházka <filip@prochazka.su>
+ * @author Instante contributors
  */
 class BootstrapRendererTest extends TestCase
 {
@@ -42,7 +43,7 @@ class BootstrapRendererTest extends TestCase
     {
         $config = new Configurator();
         $config->setTempDirectory(TEMP_DIR);
-        $config->addParameters(array('container' => array('class' => 'SystemContainer_' . md5(TEMP_DIR))));
+        $config->addParameters(['container' => ['class' => 'SystemContainer_' . md5(TEMP_DIR)]]);
         RendererExtension::register($config);
         $this->container = $config->createContainer();
     }
@@ -60,7 +61,7 @@ class BootstrapRendererTest extends TestCase
         $grouped->currentGroup = $form->addGroup('Skupina', FALSE);
         $grouped->addText('name', 'Jméno')->getLabelPrototype()->addClass('test');
         $grouped->addText('email', 'Email')->setType('email');
-        $grouped->addSelect('sex', 'Pohlaví', array(1 => 'Muž', 2 => 'Žena'));
+        $grouped->addSelect('sex', 'Pohlaví', [1 => 'Muž', 2 => 'Žena']);
         $grouped->addCheckbox('mailing', 'Zasílat novinky');
         $grouped->addButton('add', 'Přidat');
 
@@ -69,7 +70,7 @@ class BootstrapRendererTest extends TestCase
 
         $other = $form->addContainer('other');
         $other->currentGroup = $form->addGroup('Other', FALSE);
-        $other->addRadioList('sexy', 'Sexy', array(1 => 'Ano', 2 => 'Ne'));
+        $other->addRadioList('sexy', 'Sexy', [1 => 'Ano', 2 => 'Ne']);
         $other->addPassword('heslo', 'Heslo')->addError('chybka!');
         $other->addSubmit('pass', "Nastavit heslo")->setAttribute('class', 'btn-warning');
 
@@ -89,7 +90,7 @@ class BootstrapRendererTest extends TestCase
      */
     public function dataRenderingBasics()
     {
-        return array_map(function ($f) { return array(basename($f)); }, glob(__DIR__ . '/basic/input/*.latte'));
+        return array_map(function ($f) { return [basename($f)]; }, glob(__DIR__ . '/basic/input/*.latte'));
     }
 
 
@@ -111,7 +112,7 @@ class BootstrapRendererTest extends TestCase
      */
     public function dataRenderingComponents()
     {
-        return array_map(function ($f) { return array(basename($f)); }, glob(__DIR__ . '/components/input/*.latte'));
+        return array_map(function ($f) { return [basename($f)]; }, glob(__DIR__ . '/components/input/*.latte'));
     }
 
 
@@ -138,8 +139,8 @@ class BootstrapRendererTest extends TestCase
         $form->addText('name', 'Name');
         $form->addCheckbox('check', 'Indeed');
         $form->addUpload('image', 'Image');
-        $form->addRadioList('sex', 'Sex', array(1 => 'Man', 'Woman'));
-        $form->addSelect('day', 'Day', array(1 => 'Monday', 'Tuesday'));
+        $form->addRadioList('sex', 'Sex', [1 => 'Man', 'Woman']);
+        $form->addSelect('day', 'Day', [1 => 'Monday', 'Tuesday']);
         $form->addTextArea('desc', 'Description');
         $form->addSubmit('send', 'Odeslat');
 
@@ -169,7 +170,7 @@ class BootstrapRendererTest extends TestCase
      */
     public function dataRenderingIndividual()
     {
-        return array_map(function ($f) { return array(basename($f)); }, glob(__DIR__ . '/individual/input/*.latte'));
+        return array_map(function ($f) { return [basename($f)]; }, glob(__DIR__ . '/individual/input/*.latte'));
     }
 
 
@@ -197,16 +198,16 @@ class BootstrapRendererTest extends TestCase
         $b->addText('mam', 'Mam');
         $b->setRenderer(new BootstrapRenderer($this->createTemplate()));
 
-        $this->assertTemplateOutput(array(
+        $this->assertTemplateOutput([
             'control' => $control,
             '_control' => $control,
-        ), __DIR__ . '/edge/input/multipleFormsInTemplate.latte',
+        ], __DIR__ . '/edge/input/multipleFormsInTemplate.latte',
             __DIR__ . '/edge/output/multipleFormsInTemplate.html');
 
-        $this->assertTemplateOutput(array(
+        $this->assertTemplateOutput([
             'control' => $control,
             '_control' => $control,
-        ), __DIR__ . '/edge/input/multipleFormsInTemplate_parts.latte',
+        ], __DIR__ . '/edge/input/multipleFormsInTemplate_parts.latte',
             __DIR__ . '/edge/output/multipleFormsInTemplate_parts.html');
     }
 
@@ -237,12 +238,12 @@ class BootstrapRendererTest extends TestCase
         $control = new ControlMock();
         $control['foo'] = $form;
 
-        $this->assertTemplateOutput(array(
+        $this->assertTemplateOutput([
             'form' => $form,
             '_form' => $form,
             'control' => $control,
             '_control' => $control,
-        ), $latteFile, $expectedOutput);
+        ], $latteFile, $expectedOutput);
 
         foreach ($form->getComponents(TRUE, 'Nette\Forms\Controls\CsrfProtection') as $control) {
             /** @var \Nette\Forms\Controls\CsrfProtection $control */
@@ -321,19 +322,19 @@ class ArraySessionStorage extends Nette\Object implements Nette\Http\ISessionSto
 
     public function __construct(Nette\Http\Session $session = NULL)
     {
-        $session->setOptions(array('cookie_disabled' => TRUE));
+        $session->setOptions(['cookie_disabled' => TRUE]);
     }
 
 
     public function open($savePath, $sessionName)
     {
-        $this->session = array();
+        $this->session = [];
     }
 
 
     public function close()
     {
-        $this->session = array();
+        $this->session = [];
     }
 
 
