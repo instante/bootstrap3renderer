@@ -1,7 +1,6 @@
 language: php
 
 env:
-  - NETTE=2.1.*
   - NETTE=2.2.*
   - NETTE=2.3.*
   - NETTE=@dev
@@ -22,3 +21,7 @@ script: bash ./tests/run-tests.sh
 
 after_failure:
   - 'for i in $(find ./tests -name \*.actual); do echo "--- $i"; cat $i; echo; echo; done'
+
+matrix:
+  allow_failures:
+    - env: NETTE=2.2.*
