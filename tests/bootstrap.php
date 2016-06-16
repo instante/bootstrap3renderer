@@ -10,6 +10,14 @@ date_default_timezone_set('Europe/Prague');
 define('TEMP_DIR', __DIR__ . '/tmp/' . (isset($_SERVER['argv']) ? md5(serialize($_SERVER['argv'])) : getmypid()));
 Tester\Helpers::purge(TEMP_DIR);
 
+class MockSession extends Nette\Http\Session
+{
+    public function regenerateId()
+    {
+        //suppress call to avoid PHP7 error
+    }
+
+}
 
 $_SERVER = array_intersect_key($_SERVER, array_flip([
     'PHP_SELF',
