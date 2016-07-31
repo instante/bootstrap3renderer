@@ -26,7 +26,7 @@
                 {if $iterator->first}<div class="form-group"><div class="form-actions{ifset $skipClass} {$skipClass} {$inputClass}{/ifset}">{/if}
                 {input $renderer->getControlName($control)}
                 {if !$renderer->isSubmitButton($iterator->nextValue)}</div></div>{/if}
-                {?continue}
+                {php continue}
             {/if}
             {if $renderer->horizontalMode}
                 {var $attrs = ['input' => [], 'label' => ['class' => $labelClass]]}
@@ -35,7 +35,7 @@
             {/if}
 
             {block #control}
-            <div{? $_pairCtrl = clone $control->getOption('pairContainer');
+            <div{php $_pairCtrl = clone $control->getOption('pairContainer');
                     if (array_key_exists('pair', $attrs)) $_pairCtrl->addAttributes($attrs['pair']);
                     if (array_key_exists('pair-class', $attrs)) $_pairCtrl->addClass($attrs['pair-class']);
                 }{$_pairCtrl->attributes()|noescape} n:tag-if="$control->getOption('pairContainer')">
