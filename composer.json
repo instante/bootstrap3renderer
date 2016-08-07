@@ -1,19 +1,30 @@
 {
-	"name": "instante/bootstrap-3-renderer",
-	"type": "library",
-	"description": "Nette forms renderer with bootstrap 3",
-	"keywords": ["nette", "forms", "bootstrap", "bootstrap3"],
-	"license": ["BSD-3-Clause", "GPL-2.0", "GPL-3.0"],
-	"require": {
-		"nette/nette": "~2.1"
-	},
-	"require-dev": {
-		"nette/tester": "@dev",
-		"jakub-onderka/php-parallel-lint": "~0.6"
-	},
-	"autoload": {
-		"psr-0": {
-			"Instante\\Bootstrap3Renderer\\": "src/"
-		}
-	}
+    "name": "instante/bootstrap-3-renderer",
+    "type": "library",
+    "description": "Nette forms renderer with bootstrap 3",
+    "keywords": [
+        "nette",
+        "forms",
+        "bootstrap",
+        "bootstrap3"
+    ],
+    "license": [
+        "BSD-3-Clause",
+        "GPL-2.0",
+        "GPL-3.0"
+    ],
+    "require": {
+        "nette/nette": "~2.4"
+    },
+    "require-dev": {
+        "nette/tester": "@dev",
+        "instante/php-test-suite": "@dev",
+        "mockery/mockery": "@dev",
+        "jakub-onderka/php-parallel-lint": "~0.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Instante\\Bootstrap3Renderer\\": "src/"
+        }
+    }
 }

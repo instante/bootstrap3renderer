@@ -3,7 +3,6 @@
 /**
  * Test: Instante\Bootstrap3Renderer\BootstrapRenderer.
  *
- * @testCase InstanteTests\Boostrap3Renderer\BootstrapRendererTest
  * @author Filip Procházka <filip@prochazka.su>
  * @author Instante contributors
  * @package InstanteTests\FormRenderer
@@ -13,18 +12,20 @@ namespace InstanteTests\Boostrap3Renderer;
 
 use Instante\Bootstrap3Renderer\BootstrapRenderer;
 use Instante\Bootstrap3Renderer\DI\RendererExtension;
-use Instante\Bootstrap3Renderer\Latte;
 
 use Nette;
 use Nette\Application\UI\Form;
+use Nette\Application\UI\Presenter;
 use Nette\Configurator;
 use Nette\Utils\Html;
 use Nette\Utils\Strings;
 use Tester\Assert;
+use Tester\Environment;
 use Tester\TestCase;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+Environment::skip('old version 1.* test');
 
 /**
  * @author Filip Procházka <filip@prochazka.su>
@@ -58,8 +59,8 @@ class BootstrapRendererTest extends TestCase
         $form->addError("General failure!");
 
         $grouped = $form->addContainer('grouped');
-        $grouped->currentGroup = $form->addGroup('Skupina', FALSE);
-        $grouped->addText('name', 'Jméno')->getLabelPrototype()->addClass('test');
+        $grouped->setCurrentGroup($form->addGroup('Skupina', FALSE));
+        $grouped->addText('name', 'Jméno')->getLabelPrototype()->class[] = 'test';
         $grouped->addText('email', 'Email')->setType('email');
         $grouped->addSelect('sex', 'Pohlaví', [1 => 'Muž', 2 => 'Žena']);
         $grouped->addCheckbox('mailing', 'Zasílat novinky');
@@ -69,7 +70,7 @@ class BootstrapRendererTest extends TestCase
         $grouped->addSubmit('poke2', 'Ještě Šťouchnout')->setAttribute('class', 'btn-success');
 
         $other = $form->addContainer('other');
-        $other->currentGroup = $form->addGroup('Other', FALSE);
+        $other->setCurrentGroup($form->addGroup('Other', FALSE));
         $other->addRadioList('sexy', 'Sexy', [1 => 'Ano', 2 => 'Ne']);
         $other->addPassword('heslo', 'Heslo')->addError('chybka!');
         $other->addSubmit('pass', "Nastavit heslo")->setAttribute('class', 'btn-warning');
@@ -77,7 +78,7 @@ class BootstrapRendererTest extends TestCase
         $form->addUpload('photo', 'Fotka');
         $form->addSubmit('up', 'Nahrát fotku');
         $form->addTextArea('desc', 'Popis');
-        $form->addProtection('nemam', 10);
+        $form->addProtection('nemam');
         $form->addSubmit('submit', 'Uložit')->setAttribute('class', 'btn-primary');
         $form->addSubmit('delete', 'Smazat');
 
@@ -90,7 +91,9 @@ class BootstrapRendererTest extends TestCase
      */
     public function dataRenderingBasics()
     {
-        return array_map(function ($f) { return [basename($f)]; }, glob(__DIR__ . '/basic/input/*.latte'));
+        return array_map(function ($f) {
+            return [basename($f)];
+        }, glob(__DIR__ . '/basic/input/*.latte'));
     }
 
 
@@ -112,7 +115,9 @@ class BootstrapRendererTest extends TestCase
      */
     public function dataRenderingComponents()
     {
-        return array_map(function ($f) { return [basename($f)]; }, glob(__DIR__ . '/components/input/*.latte'));
+        return array_map(function ($f) {
+            return [basename($f)];
+        }, glob(__DIR__ . '/components/input/*.latte'));
     }
 
 
@@ -136,6 +141,7 @@ class BootstrapRendererTest extends TestCase
     private function dataCreateForm()
     {
         $form = new Form;
+
         $form->addText('name', 'Name');
         $form->addCheckbox('check', 'Indeed');
         $form->addUpload('image', 'Image');
@@ -158,7 +164,10 @@ class BootstrapRendererTest extends TestCase
 
         // the div here and fieldset in template is intentional
         $containerGroup = $form->addGroup('Group with container', FALSE)
-            ->setOption('container', Html::el('div')->id('mam')->class('yes')->data('magic', 'is real'));
+            ->setOption('container', Html::el('div')->addAttributes([
+                'id' => 'mam',
+                'class' => 'yes',
+            ])->data('magic', 'is real'));
         $containerGroup->add($form->addText('containerGroupedName', 'Name'));
 
         return $form;
@@ -170,7 +179,9 @@ class BootstrapRendererTest extends TestCase
      */
     public function dataRenderingIndividual()
     {
-        return array_map(function ($f) { return [basename($f)]; }, glob(__DIR__ . '/individual/input/*.latte'));
+        return array_map(function ($f) {
+            return [basename($f)];
+        }, glob(__DIR__ . '/individual/input/*.latte'));
     }
 
 
@@ -312,6 +323,8 @@ class ControlMock extends Nette\Application\UI\Control
  *
  * @internal
  */
+
+/** @noinspection PhpDeprecationInspection */
 class ArraySessionStorage extends Nette\Object implements Nette\Http\ISessionStorage
 {
 
@@ -368,5 +381,8 @@ class ArraySessionStorage extends Nette\Object implements Nette\Http\ISessionSto
 
 }
 
+class FooPresenter extends Presenter
+{
+}
 
 (new BootstrapRendererTest())->run();
