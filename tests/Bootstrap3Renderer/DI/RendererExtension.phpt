@@ -4,6 +4,7 @@ namespace InstanteTests\Boostrap3Renderer\DI;
 
 use Instante\Bootstrap3Renderer\DI\RendererExtension;
 
+use Instante\Bootstrap3Renderer\Latte\FormRenderingDispatcher;
 use Instante\Bootstrap3Renderer\Latte\FormMacros;
 use Nette\Configurator;
 use Nette\DI\Compiler;
@@ -28,5 +29,9 @@ $ext->setCompiler($mockCompiler, 'foo');
 
 $mockCompiler->shouldReceive('getContainerBuilder->getDefinition->addSetup')->withArgs(function ($arg) {
     return strpos($arg, FormMacros::class) !== FALSE;
-})->once();
+})->once()->andReturnSelf();
+$mockCompiler->shouldReceive('getContainerBuilder->getDefinition->addSetup')->withArgs(function ($arg) {
+    return strpos($arg, 'formRenderingDispatcher') !== FALSE;
+})->once()->andReturnSelf();
+$mockCompiler->shouldReceive('getContainerBuilder->addDefinition->setClass')->with(FormRenderingDispatcher::class)->once();
 $ext->loadConfiguration();

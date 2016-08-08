@@ -2,6 +2,7 @@
 
 namespace Instante\Bootstrap3Renderer\DI;
 
+use Instante\Bootstrap3Renderer\Latte\FormRenderingDispatcher;
 use Instante\Bootstrap3Renderer\Latte\FormMacros;
 use Nette\Configurator;
 use Nette\DI\Compiler;
@@ -19,9 +20,12 @@ class RendererExtension extends CompilerExtension
         $builder = $this->getContainerBuilder();
 
         $FormMacros = FormMacros::class;
-        $builder->getDefinition('nette.latteFactory')
+        $builder->addDefinition($this->prefix('formRenderingDispatcher'))
+            ->setClass(FormRenderingDispatcher::class);
+        $builder->getDefinition('latte.latteFactory')
             ->addSetup("?->onCompile[] = function() use (?) { $FormMacros::install(?->getCompiler()); }",
-                ['@self', '@self', '@self',]);
+                ['@self', '@self', '@self',])
+            ->addSetup("?->addProvider('formRenderingDispatcher', ?)", ['@self', $this->prefix('@formRenderingDispatcher'),]);
     }
 
     public static function register(Configurator $config)
