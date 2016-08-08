@@ -3,6 +3,7 @@
 namespace Instante\Bootstrap3Renderer;
 
 use Instante\ExtendedFormMacros\IExtendedFormRenderer;
+use Nette\Bridges\FormsLatte\Runtime;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
@@ -105,19 +106,19 @@ class BootstrapRenderer implements IExtendedFormRenderer
         return $this;
     }
 
-    public function renderBegin(Form $form)
+    public function renderBegin(Form $form, $attrs = [])
     {
         if ($this->form !== $form) {
             $this->form = $form;
         }
-        //TODO
-        return '[FORM]';
+        /** @noinspection PhpInternalEntityUsedInspection */
+        return Runtime::renderFormBegin($form, $attrs);
     }
 
-    public function renderControlErrors($control)
+    public function renderControlErrors(IControl $control)
     {
         //TODO
-        return '[END]';
+        return '[ERRORS]';
     }
 
     public function renderGlobalErrors($ownOnly = TRUE)
@@ -134,7 +135,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
     public function renderEnd()
     {
-        //TODO
-        return '[/FORM]';
+        /** @noinspection PhpInternalEntityUsedInspection */
+        return Runtime::renderFormEnd($this->form);
     }
 }
