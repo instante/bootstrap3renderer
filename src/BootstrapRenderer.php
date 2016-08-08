@@ -2,6 +2,7 @@
 
 namespace Instante\Bootstrap3Renderer;
 
+use Instante\ExtendedFormMacros\IExtendedFormRenderer;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
