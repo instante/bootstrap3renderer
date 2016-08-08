@@ -24,7 +24,7 @@ if (!class_exists('Nette\Bridges\FormsLatte\FormMacros')) {
  * @author Richard Ejem
  * @author Ondrej Hubsch
  */
-class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRenderer
+class OldBootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRenderer
 {
 
     const MODE_HORIZONTAL = 'form-horizontal';
@@ -33,17 +33,17 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
     const MODE_NO_CLASS = self::MODE_VERTICAL;
 
     public static $checkboxListClasses
-        = array(
+        = [
             'Nextras\Forms\Controls\MultiOptionList',
             'Nette\Forms\Controls\CheckboxList',
             'Kdyby\Forms\Controls\CheckboxList',
-        );
+        ];
 
     public static $textBaseClasses
-        = array(
+        = [
             'Nette\Forms\Controls\TextBase',
             'Vodacek\Forms\Controls\DateInput',
-        );
+        ];
 
     /** @var int */
     private $labelColumns = 2;
@@ -66,7 +66,7 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
     /**
      * Groups that should be rendered first
      */
-    public $priorGroups = array();
+    public $priorGroups = [];
 
     /**
      * @var \Nette\Forms\Form
@@ -137,8 +137,8 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 
         $this->template->setFile(__DIR__ . '/@form.latte');
         $this->template->setParameters(
-            array_fill_keys(array('control', '_control', 'presenter', '_presenter'), NULL) +
-            array('_form' => $this->form, 'form' => $this->form, 'renderer' => $this)
+            array_fill_keys(['control', '_control', 'presenter', '_presenter'], NULL) +
+            ['_form' => $this->form, 'form' => $this->form, 'renderer' => $this]
         );
 
         if ($this->horizontalMode) {
@@ -159,7 +159,7 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
         } elseif ($mode === 'end') {
             FormMacros::renderFormEnd($this->form);
         } else {
-            $attrs = array('input' => array(), 'label' => array(), 'pair' => array(), 'pair-class' => '');
+            $attrs = ['input' => [], 'label' => [], 'pair' => [], 'pair-class' => ''];
 
             foreach ((array)$args as $key => $val) {
                 if (stripos($key, 'input-') === 0) {
@@ -267,7 +267,7 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
         $formErrors = $this->errorsAtInputs ? $this->form->getOwnErrors() : $this->form->getErrors();
 
         if (!$formErrors) {
-            return array();
+            return [];
         }
 
         $form = $this->form;
@@ -290,7 +290,7 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
      */
     public function findGroups()
     {
-        $formGroups = $visitedGroups = array();
+        $formGroups = $visitedGroups = [];
         foreach ($this->priorGroups as $i => $group) {
             if (!$group instanceof Nette\Forms\ControlGroup) {
                 if (!$group = $this->form->getGroup($group)) {
@@ -367,21 +367,21 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
 
         $groupAttrs = $group->getOption('container', Html::el())->setName(NULL);
         /** @var Html $groupAttrs */
-        $groupAttrs->attrs += array_diff_key($group->getOptions(), array_fill_keys(array(
+        $groupAttrs->attrs += array_diff_key($group->getOptions(), array_fill_keys([
             'container',
             'label',
             'description',
             'visual',
             'template', // these are not attributes
-        ), NULL));
+        ], NULL));
 
         // fake group
-        return (object)(array(
+        return (object)([
                 'controls' => $controls,
                 'label' => $groupLabel,
                 'description' => $groupDescription,
                 'attrs' => $groupAttrs,
-            ) + $group->getOptions());
+            ] + $group->getOptions());
     }
 
     /**
@@ -411,7 +411,7 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
         }
 
         // create element
-        return Html::el('p', array('class' => 'help-block'))
+        return Html::el('p', ['class' => 'help-block'])
             ->{$desc instanceof Html ? 'add' : 'setText'}($desc);
     }
 
@@ -433,7 +433,7 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
         }
 
         // create element
-        return Html::el('p', array('class' => 'text-danger'))
+        return Html::el('p', ['class' => 'text-danger'])
             ->{$error instanceof Html ? 'add' : 'setText'}($error);
     }
 
@@ -526,24 +526,24 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
      */
     public static function getRadioListItems(Controls\RadioList $control)
     {
-        $items = array();
+        $items = [];
         if (count($control->items) === 0) {
             $control->getControl(); //sets rendered flag to control if emtpy
         }
         foreach ($control->items as $key => $value) {
             $el = $control->getControlPart($key);
             if ($el->getName() === 'input') {
-                $items[$key] = $radio = (object)array(
+                $items[$key] = $radio = (object)[
                     'input' => $el,
                     'label' => $cap = $control->getLabelPart($key),
                     'caption' => $cap->getText(),
-                );
+                ];
             } else {
-                $items[$key] = $radio = (object)array(
+                $items[$key] = $radio = (object)[
                     'input' => $el[0],
                     'label' => $el[1],
                     'caption' => $el[1]->getText(),
-                );
+                ];
             }
 
             $radio->html = clone $radio->label;
@@ -561,32 +561,32 @@ class BootstrapRenderer extends Nette\Object implements Nette\Forms\IFormRendere
      */
     public static function getCheckboxListItems(Controls\BaseControl $control)
     {
-        $items = array();
+        $items = [];
         if (count($control->items) === 0) {
             $control->getControl(); //sets rendered flag to control if emtpy
         }
         foreach ($control->items as $key => $value) {
             if (method_exists($control, 'getControlPart')) {
                 $el = $control->getControlPart($key);
-                $items[$key] = $check = (object)array(
+                $items[$key] = $check = (object)[
                     'input' => $el,
                     'label' => $cap = $control->getLabelPart($key),
                     'caption' => $cap->getText(),
-                );
+                ];
             } else {
                 $el = $control->getControl($key);
                 if (is_string($el)) {
-                    $items[$key] = $check = (object)array(
+                    $items[$key] = $check = (object)[
                         'input' => Html::el()->setHtml($el),
                         'label' => Html::el(),
                         'caption' => $value,
-                    );
+                    ];
                 } else {
-                    $items[$key] = $check = (object)array(
+                    $items[$key] = $check = (object)[
                         'input' => $el[0],
                         'label' => $el[1],
                         'caption' => $el[1]->getText(),
-                    );
+                    ];
                 }
             }
             $check->html = clone $check->label;
