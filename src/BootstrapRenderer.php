@@ -58,13 +58,9 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
     public function render(Form $form, $mode = NULL)
     {
-        if ($this->form !== $form) {
-            $this->form = $form;
-        }
-
         $s = '';
         if (!$mode || $mode === 'begin') {
-            $s .= $this->renderBegin();
+            $s .= $this->renderBegin($form);
         }
         if (!$mode || strtolower($mode) === 'ownerrors') {
             $s .= $this->renderGlobalErrors();
@@ -93,8 +89,11 @@ class BootstrapRenderer implements IExtendedFormRenderer
         return $this;
     }
 
-    private function renderBegin()
+    public function renderBegin(Form $form)
     {
+        if ($this->form !== $form) {
+            $this->form = $form;
+        }
         return '[FORM]';
     }
 
