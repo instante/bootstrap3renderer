@@ -110,26 +110,31 @@ class BootstrapRenderer implements IExtendedFormRenderer
         if ($this->form !== $form) {
             $this->form = $form;
         }
+        //TODO
         return '[FORM]';
     }
 
-    private function renderControlErrors($control)
+    public function renderControlErrors($control)
     {
+        //TODO
         return '[END]';
     }
 
-    private function renderGlobalErrors($ownOnly = TRUE)
+    public function renderGlobalErrors($ownOnly = TRUE)
     {
+        //TODO
         return $ownOnly ? '[OWN]' : '[GLOBAL]';
     }
 
-    private function renderBody()
+    public function renderBody()
     {
+        //TODO
         return '[BODY]';
     }
 
-    private function renderEnd()
+    public function renderEnd()
     {
+        //TODO
         return '[/FORM]';
     }
 }
