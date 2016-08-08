@@ -77,6 +77,22 @@ class BootstrapRenderer implements IExtendedFormRenderer
         return $s;
     }
 
+    /**
+     * Sets label (and optionally input) width in bootstrap columns layout
+     *
+     * @param int $labelColumns
+     * @param int|NULL $inputColumns if null, automatically filled to 12-labelColumns
+     * @return $this
+     */
+    public function setLabelColumns($labelColumns, $inputColumns = NULL)
+    {
+        if ($inputColumns === NULL) {
+            $inputColumns = 12 - $labelColumns;
+        }
+        $this->labelColumns = $labelColumns;
+        $this->inputColumns = $inputColumns;
+        return $this;
+    }
 
     /**
      * @param string $mode RenderModeEnum
