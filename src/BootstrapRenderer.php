@@ -22,15 +22,14 @@ use Nette\InvalidStateException;
  */
 class BootstrapRenderer implements IExtendedFormRenderer
 {
+    /** @var int */
+    protected $labelColumns = 2;
 
     /** @var int */
-    private $labelColumns = 2;
+    protected $inputColumns = 10;
 
-    /** @var int */
-    private $inputColumns = 10;
-
-    /** @var string */
-    private $columnClassPrefix = 'col-sm-';
+    /** @var bool if true, controls without group go first */
+    protected $grouplessRenderedFirst = FALSE;
 
     /**
      * set to false, if you want to display the field errors also as form errors
@@ -38,11 +37,11 @@ class BootstrapRenderer implements IExtendedFormRenderer
      */
     public $errorsAtInputs = TRUE;
 
-    /** @var \Nette\Forms\Form */
-    private $form;
+    /** @var Form */
+    protected $form;
 
     /** @var string RenderModeEnum */
-    private $renderMode = RenderModeEnum::VERTICAL;
+    protected $renderMode = RenderModeEnum::VERTICAL;
 
     public function renderPair(IControl $control)
     {
@@ -185,7 +184,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
         }
     }
 
-    private function assertInForm()
+    protected function assertInForm()
     {
         if ($this->form === NULL) {
             throw new InvalidStateException('No form set, please call renderBegin($form) first.');
