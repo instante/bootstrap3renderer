@@ -57,40 +57,6 @@ class FooControl implements IControl, IComponent
         $this->parent = $parent;
         $this->name = $name;
     }
-
-    function getOption()
-    {
-        return FALSE;
-    }
-
-    function setOption()
-    {
-    }
-
-    function getForm()
-    {
-        return $this->parent;
-    }
-
-    function isRequired()
-    {
-        return FALSE;
-    }
-
-    function getLabel()
-    {
-        return 'a';
-    }
-
-    function getControl()
-    {
-        return 'a';
-    }
-
-    function hasErrors()
-    {
-        return TRUE;
-    }
 }
 
 $form = new Form;
