@@ -4,6 +4,7 @@ namespace Instante\Bootstrap3Renderer;
 
 use Instante\ExtendedFormMacros\IExtendedFormRenderer;
 use Instante\Helpers\SecureCallHelper;
+use Instante\Helpers\Strings;
 use /** @noinspection PhpInternalEntityUsedInspection */
     Nette\Bridges\FormsLatte\Runtime;
 use Nette\Forms\Container;
@@ -12,6 +13,7 @@ use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
+use Nette\Utils\Html;
 use SplObjectStorage;
 use Traversable;
 
@@ -26,11 +28,17 @@ use Traversable;
  */
 class BootstrapRenderer implements IExtendedFormRenderer
 {
+    const FORM_CONTROL_CLASS = 'form-control';
+    const COLUMNS_CLASS_PATTERN = 'col-%(size)-%(cols;d)';
+
     /** @var int */
     protected $labelColumns = 2;
 
     /** @var int */
     protected $inputColumns = 10;
+
+    /** @var string ScreenSizeEnum */
+    protected $columnMinScreenSize = ScreenSizeEnum::SM;
 
     /** @var bool if true, controls without group go first */
     protected $grouplessRenderedFirst = FALSE;
@@ -45,14 +53,35 @@ class BootstrapRenderer implements IExtendedFormRenderer
     protected $form;
 
     /** @var string RenderModeEnum */
-    protected $renderMode = RenderModeEnum::VERTICAL;
+    protected $renderMode = RenderModeEnum::HORIZONTAL;
 
     /** @var SplObjectStorage */
     private $renderedControls;
 
+    /** @var PrototypeContainer */
+    private $prototypes;
+
+    /** @var int */
+    private static $uniqueDescriptionId = 0;
+
+    /**
+     * @param null|string $renderMode RenderModeEnum
+     * @param PrototypeContainer $prototypes
+     */
+    public function __construct($renderMode = RenderModeEnum::VERTICAL, PrototypeContainer $prototypes = NULL)
+    {
+        $this->renderMode = $renderMode;
+        $this->prototypes = $prototypes ?: PrototypeContainer::createDefault();
+    }
+
     public function renderPair(IControl $control)
     {
-        // TODO: Implement renderPair() method.
+        $pair = clone $this->prototypes->pair;
+        $pair->addHtml($this->renderLabel($control));
+        $pair->addHtml($this->renderControl($control, TRUE));
+        $pair->addHtml($this->renderControlErrors($control));
+        $pair->addHtml($this->renderControlDescription($control));
+        return (string)$pair;
     }
 
     public function renderGroup(ControlGroup $control)
@@ -266,10 +295,93 @@ class BootstrapRenderer implements IExtendedFormRenderer
         return '[BUTTONS]';
     }
 
+    public function renderLabel(IControl $control)
+    {
+        $el = SecureCallHelper::tryCall($control, 'getLabel');
+        if ($el === NULL) {
+            $el = clone $this->prototypes->emptyLabel;
+            if (method_exists($control, 'getHtmlId')) {
+                $el->setAttribute('for', $control->getHtmlId());
+            }
+        }
+        if ($el instanceof Html && $this->renderMode === RenderModeEnum::HORIZONTAL) {
+            $el->appendAttribute('class', $this->getColumnsClass($this->labelColumns));
+        }
+        return (string)$el;
+    }
+
+    public function renderControl(IControl $control, $renderedDescription = FALSE)
+    {
+        $this->renderedControls->attach($control);
+        if (!method_exists($control, 'getControl')) {
+            return '';
+        }
+        $el = $control->getControl();
+        if ($el instanceof Html) {
+            $el->appendAttribute('class', static::FORM_CONTROL_CLASS);
+            if ($renderedDescription && $this->getControlDescription($control) !== NULL) {
+                $el->setAttribute('aria-describedby', $this->getDescriptionId($control));
+            }
+            if ($this->renderMode === RenderModeEnum::HORIZONTAL) {
+                $el = Html::el('div')
+                    ->appendAttribute('class', $this->getColumnsClass($this->inputColumns))
+                    ->addHtml($el);
+            }
+        }
+        return $el;
+    }
+
+    protected function getColumnsClass($numberColumns)
+    {
+        return Strings::format(static::COLUMNS_CLASS_PATTERN, [
+            'size' => $this->columnMinScreenSize,
+            'cols' => $numberColumns,
+        ]);
+    }
+
+    /** @return string ScreenSizeEnum */
+    public function getColumnMinScreenSize()
+    {
+        return $this->columnMinScreenSize;
+    }
+
+    /**
+     * @param string $columnMinScreenSize ScreenSizeEnum
+     * @return $this
+     */
+    public function setColumnMinScreenSize($columnMinScreenSize)
+    {
+        ScreenSizeEnum::assertValidValue($columnMinScreenSize);
+        $this->columnMinScreenSize = $columnMinScreenSize;
+        return $this;
+    }
+
+    public function renderControlDescription(IControl $control)
+    {
+        $description = $this->getControlDescription($control);
+        if ($description === NULL) {
+            return '';
+        }
+        return (clone $this->prototypes->controlDescription)
+            ->setAttribute('id', $this->getDescriptionId($control))
+            ->addHtml($description);
+    }
+
     // **** intentionally private, do not rely on these as they are workarounds on IControl interface deficiencies
 
     private function isButton(IControl $control)
     {
         return SecureCallHelper::tryCall($control, 'getOption', 'type') === 'button';
+    }
+
+    private function getControlDescription(IControl $control)
+    {
+        return SecureCallHelper::tryCall($control, 'getOption', 'description');
+    }
+
+    private function getDescriptionId(IControl $control)
+    {
+        $id = SecureCallHelper::tryCall($control, 'getHtmlId') ?: ('-anonymous-' . (self::$uniqueDescriptionId++));
+        return 'describe-' . $id;
     }
 }
