@@ -3,23 +3,31 @@
 namespace InstanteTests\Bootstrap3Renderer;
 
 use Instante\Bootstrap3Renderer\BootstrapRenderer;
-use Instante\Bootstrap3Renderer\RenderModeEnum;
 use Nette\Forms\Form;
 use Tester\Assert;
 
 require_once __DIR__ . '/../bootstrap.php';
 
+class BodyTestingBootstrapRenderer extends BootstrapRenderer
+{
+    public function renderGroups()
+    {
+        return '<GROUPS>';
+    }
+
+    protected function renderPairs($controls)
+    {
+        return '<PAIRS>';
+    }
+}
+
 $form = new Form;
 
-$renderer = new BootstrapRenderer;
-Assert::same('<form action="" method="post">', $renderer->renderBegin($form));
+$renderer = new BodyTestingBootstrapRenderer;
+$renderer->renderBegin($form); //to fetch form object
 
-$renderer->setRenderMode(RenderModeEnum::HORIZONTAL);
-Assert::same('<form action="" method="post" class="form-horizontal">', $renderer->renderBegin($form));
-
-$renderer->setRenderMode(RenderModeEnum::INLINE);
-Assert::same('<form action="" method="post" class="form-inline">', $renderer->renderBegin($form));
-
-Assert::match('~class=(?=.*\bform-inline\b)(?=.*\bfoo\b)~', $renderer->renderBegin($form, ['class' => 'foo'])); //has both form-inline and foo class
-
-Assert::same('<form action="" method="post">', $renderer->renderBegin($form, ['class' => 'no-form-inline']));
+Assert::match('~<GROUPS>\s*<PAIRS>~', $renderer->renderBody());
+$renderer->setGrouplessRenderedFirst();
+Assert::match('~<PAIRS>\s*<GROUPS>~', $renderer->renderBody());
+$renderer->setGrouplessRenderedFirst(FALSE);
+Assert::match('~<GROUPS>\s*<PAIRS>~', $renderer->renderBody());
