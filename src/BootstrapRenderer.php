@@ -10,7 +10,6 @@ use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
-use Nette\Utils\Html;
 
 /**
  * Created with twitter bootstrap in mind.
@@ -43,7 +42,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
     private $form;
 
     /** @var string RenderModeEnum */
-    private $mode = RenderModeEnum::VERTICAL;
+    private $renderMode = RenderModeEnum::VERTICAL;
 
     public function renderPair(IControl $control)
     {
@@ -100,14 +99,20 @@ class BootstrapRenderer implements IExtendedFormRenderer
     }
 
     /**
-     * @param string $mode RenderModeEnum
+     * @param string $renderMode RenderModeEnum
      * @return $this
      */
-    public function setMode($mode)
+    public function setRenderMode($renderMode)
     {
-        RenderModeEnum::assertValidValue($mode);
-        $this->mode = $mode;
+        RenderModeEnum::assertValidValue($renderMode);
+        $this->renderMode = $renderMode;
         return $this;
+    }
+
+    /** @return string RenderModeEnum */
+    public function getRenderMode()
+    {
+        return $this->renderMode;
     }
 
     public function renderBegin(Form $form, array $attrs = [])
@@ -151,16 +156,16 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
     private function addFormModeClass(Form $form, array &$attrs)
     {
-        if ($this->mode !== RenderModeEnum::VERTICAL) {
+        if ($this->renderMode !== RenderModeEnum::VERTICAL) {
             if (isset($attrs['class'])) {
                 $classes = explode(' ', $attrs['class']);
-                $pos = array_search('no-' . $this->mode, $classes, TRUE);
+                $pos = array_search('no-' . $this->renderMode, $classes, TRUE);
                 if ($pos !== FALSE) {
                     // if .no-form-<mode> class is present, remove it and not include form-<mode> class
                     unset($classes[$pos]);
                 } else {
                     // otherwise add form-<mode> class
-                    $classes[] = $this->mode;
+                    $classes[] = $this->renderMode;
                 }
                 if (count($classes) === 0) {
                     unset($attrs['class']);
@@ -174,7 +179,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
                 } elseif (!is_array($classes)) {
                     $classes = [];
                 }
-                $classes[] = $this->mode;
+                $classes[] = $this->renderMode;
                 $attrs['class'] = implode(' ', $classes);
             }
         }
