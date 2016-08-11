@@ -9,6 +9,7 @@ use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
+use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
 /**
@@ -141,8 +142,11 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
     public function renderEnd()
     {
+        $this->assertInForm();
+        $form = $this->form;
+        $this->form = NULL;
         /** @noinspection PhpInternalEntityUsedInspection */
-        return (string)Runtime::renderFormEnd($this->form);
+        return Runtime::renderFormEnd($form);
     }
 
     private function addFormModeClass(Form $form, array &$attrs)
@@ -173,6 +177,13 @@ class BootstrapRenderer implements IExtendedFormRenderer
                 $classes[] = $this->mode;
                 $attrs['class'] = implode(' ', $classes);
             }
+        }
+    }
+
+    private function assertInForm()
+    {
+        if ($this->form === NULL) {
+            throw new InvalidStateException('No form set, please call renderBegin($form) first.');
         }
     }
 }

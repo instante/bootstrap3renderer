@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Verifies that Nette\Bridges\FormsLatte\Runtime::renderFormBegin() was used by $renderer->renderBegin()
+ */
+
 namespace InstanteTests\Bootstrap3Renderer;
 
 use Instante\Bootstrap3Renderer\BootstrapRenderer;
