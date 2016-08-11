@@ -3,11 +3,13 @@
 namespace Instante\Bootstrap3Renderer;
 
 use Instante\ExtendedFormMacros\IExtendedFormRenderer;
-use Nette\Bridges\FormsLatte\Runtime;
+use /** @noinspection PhpInternalEntityUsedInspection */
+    Nette\Bridges\FormsLatte\Runtime;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
+use Nette\Utils\Html;
 
 /**
  * Created with twitter bootstrap in mind.
@@ -61,6 +63,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
     {
         $s = '';
         if (!$mode || $mode === 'begin') {
+            //TODO: will have to redirect {form} macro to this routine to set form class
             $s .= $this->renderBegin($form);
         }
         if (!$mode || strtolower($mode) === 'ownerrors') {
@@ -106,13 +109,16 @@ class BootstrapRenderer implements IExtendedFormRenderer
         return $this;
     }
 
-    public function renderBegin(Form $form, $attrs = [])
+    public function renderBegin(Form $form, array $attrs = [])
     {
         if ($this->form !== $form) {
             $this->form = $form;
         }
+
+        $this->addFormModeClass($form, $attrs);
         /** @noinspection PhpInternalEntityUsedInspection */
-        return Runtime::renderFormBegin($form, $attrs);
+        $rendered = Runtime::renderFormBegin($form, $attrs);
+        return $rendered;
     }
 
     public function renderControlErrors(IControl $control)
@@ -136,6 +142,37 @@ class BootstrapRenderer implements IExtendedFormRenderer
     public function renderEnd()
     {
         /** @noinspection PhpInternalEntityUsedInspection */
-        return Runtime::renderFormEnd($this->form);
+        return (string)Runtime::renderFormEnd($this->form);
+    }
+
+    private function addFormModeClass(Form $form, array &$attrs)
+    {
+        if ($this->mode !== RenderModeEnum::VERTICAL) {
+            if (isset($attrs['class'])) {
+                $classes = explode(' ', $attrs['class']);
+                $pos = array_search('no-' . $this->mode, $classes, TRUE);
+                if ($pos !== FALSE) {
+                    // if .no-form-<mode> class is present, remove it and not include form-<mode> class
+                    unset($classes[$pos]);
+                } else {
+                    // otherwise add form-<mode> class
+                    $classes[] = $this->mode;
+                }
+                if (count($classes) === 0) {
+                    unset($attrs['class']);
+                } else {
+                    $attrs['class'] = implode(' ', $classes);
+                }
+            } else {
+                $classes = $form->getElementPrototype()->getAttribute('class');
+                if (is_string($classes)) {
+                    $classes = explode(' ', $classes);
+                } elseif (!is_array($classes)) {
+                    $classes = [];
+                }
+                $classes[] = $this->mode;
+                $attrs['class'] = implode(' ', $classes);
+            }
+        }
     }
 }
