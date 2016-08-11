@@ -362,7 +362,8 @@ class BootstrapRenderer implements IExtendedFormRenderer
         if ($description === NULL) {
             return '';
         }
-        return (clone $this->prototypes->controlDescription)
+        $el = clone $this->prototypes->controlDescription;
+        return $el
             ->setAttribute('id', $this->getDescriptionId($control))
             ->addHtml($description);
     }
