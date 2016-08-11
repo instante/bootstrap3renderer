@@ -12,7 +12,6 @@ use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
-use ReflectionClass;
 use SplObjectStorage;
 use Traversable;
 

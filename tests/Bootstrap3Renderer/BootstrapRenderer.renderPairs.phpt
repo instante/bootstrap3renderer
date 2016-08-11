@@ -3,7 +3,6 @@
 namespace InstanteTests\Bootstrap3Renderer;
 
 use Instante\Bootstrap3Renderer\BootstrapRenderer;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Tester\Assert;
