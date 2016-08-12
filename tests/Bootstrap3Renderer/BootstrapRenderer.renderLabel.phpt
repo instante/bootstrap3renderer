@@ -14,7 +14,8 @@ require_once __DIR__ . '/../bootstrap.php';
 $renderer = new BootstrapRenderer;
 $control = mock(BaseControl::class);
 $label = Html::el('label')->setText('foo');
-$control->shouldReceive('getLabel')->atLeast()->once()->andReturn($label);
+$control->shouldReceive('getLabel')->atLeast()->once()
+    ->andReturnUsing(function () use ($label) { return clone $label; });
 
 $renderer->setRenderMode(RenderModeEnum::VERTICAL);
 $rendered = $renderer->renderLabel($control);

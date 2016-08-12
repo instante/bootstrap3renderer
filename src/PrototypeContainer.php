@@ -2,81 +2,85 @@
 
 namespace Instante\Bootstrap3Renderer;
 
+use Instante\Bootstrap3Renderer\Utils\PlaceholderHtml;
 use Nette\SmartObject;
-use Nette\Utils\Html;
 
 /**
- * Container for renderer HTML element prototypes
+ * Container for renderer Html element prototypes
  *
- * @property Html $pair
- * @property Html $emptyLabel
- * @property Html $controlDescription
+ * @property PlaceholderHtml $pair
+ * @property PlaceholderHtml $emptyLabel
+ * @property PlaceholderHtml $controlDescription
  */
 class PrototypeContainer
 {
     use SmartObject;
 
-    /** @var Html */
+    /** @var PlaceholderHtml */
     private $pair;
 
-    /** @var Html */
+    /** @var PlaceholderHtml */
     private $emptyLabel;
 
-    /** @var Html */
+    /** @var PlaceholderHtml */
     private $controlDescription;
 
     public static function createDefault()
     {
         $c = new static;
-        $c->pair = Html::el('div', ['class' => 'form-group']);
-        $c->emptyLabel = Html::el('label');
-        $c->controlDescription = Html::el('span', ['class' => 'help-block']);
+        $c->pair = PlaceholderHtml::el('div', ['class' => 'form-group'])
+            ->setPlaceholder('label')
+            ->setPlaceholder('control')
+            ->setPlaceholder('errors')
+            ->setPlaceholder('description');
+        $c->emptyLabel = PlaceholderHtml::el('label');
+        $c->controlDescription = PlaceholderHtml::el('span', ['class' => 'help-block']);
         return $c;
     }
 
-    /** @return Html */
+    /** @return PlaceholderHtml */
     public function getPair()
     {
         return $this->pair;
     }
 
     /**
-     * @param Html $pair
+     * @param PlaceholderHtml $pair
      * @return $this
      */
-    public function setPair(Html $pair)
+    public function setPair(PlaceholderHtml $pair)
     {
         $this->pair = $pair;
         return $this;
     }
 
-    /** @return Html */
+    /** @return PlaceholderHtml */
     public function getEmptyLabel()
     {
         return $this->emptyLabel;
     }
 
     /**
-     * @param Html $emptyLabel
+     * @param PlaceholderHtml $emptyLabel
      * @return $this
      */
-    public function setEmptyLabel(Html $emptyLabel)
+    public function setEmptyLabel(PlaceholderHtml $emptyLabel)
     {
         $this->emptyLabel = $emptyLabel;
         return $this;
     }
 
-    /** @return Html */
+    /** @return PlaceholderHtml */
     public function getControlDescription()
     {
         return $this->controlDescription;
     }
 
     /**
-     * @param Html $controlDescription
+     * @param PlaceholderHtml $controlDescription
      * @return $this
      */
-    public function setControlDescription(Html $controlDescription)
+    public function setControlDescription(PlaceholderHtml $controlDescription)
     {
         $this->controlDescription = $controlDescription;
         return $this;

@@ -100,7 +100,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
     public function renderPair(IControl $control)
     {
         $pair = clone $this->prototypes->pair;
-        $pair->addHtml($this->renderLabel($control));
+        $pair->getPlaceholder('label')->addHtml($this->renderLabel($control));
         $ctrlHtml = $this->renderControl($control, TRUE);
         if ($this->renderMode === RenderModeEnum::HORIZONTAL) {
             // wrap in bootstrap columns
@@ -108,9 +108,9 @@ class BootstrapRenderer implements IExtendedFormRenderer
                 ->appendAttribute('class', $this->getColumnsClass($this->inputColumns))
                 ->addHtml($ctrlHtml);
         }
-        $pair->addHtml($ctrlHtml);
-        $pair->addHtml($this->renderControlErrors($control));
-        $pair->addHtml($this->renderControlDescription($control));
+        $pair->getPlaceholder('control')->addHtml($ctrlHtml);
+        $pair->getPlaceholder('errors')->addHtml($this->renderControlErrors($control));
+        $pair->getPlaceholder('description')->addHtml($this->renderControlDescription($control));
         return (string)$pair;
     }
 
@@ -331,11 +331,10 @@ class BootstrapRenderer implements IExtendedFormRenderer
         if ($el === NULL) {
             $el = clone $this->prototypes->emptyLabel;
             if (method_exists($control, 'getHtmlId')) {
-                $el->setAttribute('for', $control->getHtmlId());
+                $el->getPlaceholder()->setAttribute('for', $control->getHtmlId());
             }
         }
         if ($el instanceof Html && $this->renderMode === RenderModeEnum::HORIZONTAL) {
-            $el = clone $el;
             $el->appendAttribute('class', $this->getColumnsClass($this->labelColumns));
         }
         return (string)$el;
@@ -390,6 +389,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
         }
         $el = clone $this->prototypes->controlDescription;
         return (string)$el
+            ->getPlaceholder()
             ->setAttribute('id', $this->getDescriptionId($control))
             ->addHtml($description);
     }

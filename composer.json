@@ -16,6 +16,7 @@
     "require": {
         "instante/extended-form-macros": "@dev",
         "nette/forms": "~2.4",
+        "nette/utils": "~2.4",
         "instante/utils": "~1.3"
     },
     "require-dev": {
