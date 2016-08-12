@@ -13,6 +13,7 @@ use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
+use Nette\SmartObject;
 use Nette\Utils\Html;
 use SplObjectStorage;
 use Traversable;
@@ -24,10 +25,12 @@ use Traversable;
  * $form->setRenderer(new Instante\Bootstrap3Renderer\BootstrapRenderer);
  * </code>
  *
- * @author Richard Ejem
+ * @property PrototypeContainer $prototypes
  */
 class BootstrapRenderer implements IExtendedFormRenderer
 {
+    use SmartObject;
+
     const FORM_CONTROL_CLASS = 'form-control';
     const COLUMNS_CLASS_PATTERN = 'col-%(size)-%(cols;d)';
 
@@ -74,11 +77,38 @@ class BootstrapRenderer implements IExtendedFormRenderer
         $this->prototypes = $prototypes ?: PrototypeContainer::createDefault();
     }
 
+    /** @return PrototypeContainer */
+    public function getPrototypes()
+    {
+        return $this->prototypes;
+    }
+
+    /**
+     * @param PrototypeContainer $prototypes
+     * @return $this
+     */
+    public function setPrototypes(PrototypeContainer $prototypes)
+    {
+        $this->prototypes = $prototypes;
+        return $this;
+    }
+
+    /**
+     * @param IControl $control
+     * @return string rendered HTML
+     */
     public function renderPair(IControl $control)
     {
         $pair = clone $this->prototypes->pair;
         $pair->addHtml($this->renderLabel($control));
-        $pair->addHtml($this->renderControl($control, TRUE));
+        $ctrlHtml = $this->renderControl($control, TRUE);
+        if ($this->renderMode === RenderModeEnum::HORIZONTAL) {
+            // wrap in bootstrap columns
+            $ctrlHtml = Html::el('div')
+                ->appendAttribute('class', $this->getColumnsClass($this->inputColumns))
+                ->addHtml($ctrlHtml);
+        }
+        $pair->addHtml($ctrlHtml);
         $pair->addHtml($this->renderControlErrors($control));
         $pair->addHtml($this->renderControlDescription($control));
         return (string)$pair;
@@ -305,6 +335,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
             }
         }
         if ($el instanceof Html && $this->renderMode === RenderModeEnum::HORIZONTAL) {
+            $el = clone $el;
             $el->appendAttribute('class', $this->getColumnsClass($this->labelColumns));
         }
         return (string)$el;
@@ -322,13 +353,8 @@ class BootstrapRenderer implements IExtendedFormRenderer
             if ($renderedDescription && $this->getControlDescription($control) !== NULL) {
                 $el->setAttribute('aria-describedby', $this->getDescriptionId($control));
             }
-            if ($this->renderMode === RenderModeEnum::HORIZONTAL) {
-                $el = Html::el('div')
-                    ->appendAttribute('class', $this->getColumnsClass($this->inputColumns))
-                    ->addHtml($el);
-            }
         }
-        return $el;
+        return (string)$el;
     }
 
     protected function getColumnsClass($numberColumns)
@@ -363,7 +389,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
             return '';
         }
         $el = clone $this->prototypes->controlDescription;
-        return $el
+        return (string)$el
             ->setAttribute('id', $this->getDescriptionId($control))
             ->addHtml($description);
     }
