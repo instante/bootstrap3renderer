@@ -2,6 +2,7 @@
 
 namespace Instante\Bootstrap3Renderer;
 
+use Instante\Bootstrap3Renderer\Utils\PlaceholderHtml;
 use Instante\ExtendedFormMacros\IExtendedFormRenderer;
 use Instante\Helpers\SecureCallHelper;
 use Instante\Helpers\Strings;
@@ -10,11 +11,14 @@ use /** @noinspection PhpInternalEntityUsedInspection */
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Controls\HiddenField;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
+use Nette\NotSupportedException;
 use Nette\SmartObject;
 use Nette\Utils\Html;
+use Nette\Utils\Strings as NStrings;
 use SplObjectStorage;
 use Traversable;
 
@@ -33,6 +37,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
     const FORM_CONTROL_CLASS = 'form-control';
     const COLUMNS_CLASS_PATTERN = 'col-%(size)-%(cols;d)';
+    const COLUMNS_OFFSET_PATTERN = 'col-%(size)-offset-%(cols;d)';
 
     /** @var int */
     protected $labelColumns = 2;
@@ -95,7 +100,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
     /**
      * @param IControl $control
-     * @return string rendered HTML
+     * @return Html
      */
     public function renderPair(IControl $control)
     {
@@ -111,7 +116,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
         $pair->getPlaceholder('control')->addHtml($ctrlHtml);
         $pair->getPlaceholder('errors')->addHtml($this->renderControlErrors($control));
         $pair->getPlaceholder('description')->addHtml($this->renderControlDescription($control));
-        return (string)$pair;
+        return $pair;
     }
 
     public function renderGroup(ControlGroup $control)
@@ -321,10 +326,25 @@ class BootstrapRenderer implements IExtendedFormRenderer
         if (count($buttons) === 0) {
             return '';
         }
-        // TODO: render buttons
-        return '[BUTTONS]';
+        if ($this->renderMode === RenderModeEnum::HORIZONTAL) {
+            $container = clone $this->prototypes->horizontalButtons;
+            // set inner grid element to "col-ss-<inputcolumns> col-ss-offset-<labelcolumns>
+            $container->getPlaceholder('cols')
+                ->appendAttribute('class', $this->getColumnsClass($this->inputColumns))
+                ->appendAttribute('class', $this->getOffsetClass($this->labelColumns));
+        } else {
+            $container = PlaceholderHtml::el();
+        }
+        foreach ($buttons as $button) {
+            $container->addHtml($this->renderButton($button));
+        }
+        return $container;
     }
 
+    /**
+     * @param IControl $control
+     * @return PlaceholderHtml|mixed
+     */
     public function renderLabel(IControl $control)
     {
         $el = SecureCallHelper::tryCall($control, 'getLabel');
@@ -337,14 +357,19 @@ class BootstrapRenderer implements IExtendedFormRenderer
         if ($el instanceof Html && $this->renderMode === RenderModeEnum::HORIZONTAL) {
             $el->appendAttribute('class', $this->getColumnsClass($this->labelColumns));
         }
-        return (string)$el;
+        return $el;
     }
 
+    /**
+     * @param IControl $control
+     * @param bool $renderedDescription
+     * @return Html
+     */
     public function renderControl(IControl $control, $renderedDescription = FALSE)
     {
         $this->renderedControls->attach($control);
         if (!method_exists($control, 'getControl')) {
-            return '';
+            return Html::el();
         }
         $el = $control->getControl();
         if ($el instanceof Html) {
@@ -352,13 +377,23 @@ class BootstrapRenderer implements IExtendedFormRenderer
             if ($renderedDescription && $this->getControlDescription($control) !== NULL) {
                 $el->setAttribute('aria-describedby', $this->getDescriptionId($control));
             }
+        } else {
+            $el = Html::el()->addHtml($el);
         }
-        return (string)$el;
+        return $el;
     }
 
     protected function getColumnsClass($numberColumns)
     {
         return Strings::format(static::COLUMNS_CLASS_PATTERN, [
+            'size' => $this->columnMinScreenSize,
+            'cols' => $numberColumns,
+        ]);
+    }
+
+    protected function getOffsetClass($numberColumns)
+    {
+        return Strings::format(static::COLUMNS_OFFSET_PATTERN, [
             'size' => $this->columnMinScreenSize,
             'cols' => $numberColumns,
         ]);
@@ -388,10 +423,28 @@ class BootstrapRenderer implements IExtendedFormRenderer
             return '';
         }
         $el = clone $this->prototypes->controlDescription;
-        return (string)$el
+        return $el
             ->getPlaceholder()
             ->setAttribute('id', $this->getDescriptionId($control))
             ->addHtml($description);
+    }
+
+    public function renderButton(IControl $button)
+    {
+        /** @var Html $el */
+        $el = SecureCallHelper::tryCall($button, 'getControl');
+        if ($el === NULL) {
+            throw new NotSupportedException('Rendering buttons not having getControl() method is not supported');
+        }
+        $el->appendAttribute('class', 'btn');
+        if (!$this->hasButtonTypeClass($el)) {
+            if ($button instanceof SubmitButton) {
+                $el->appendAttribute('class', 'btn-primary');
+            } else {
+                $el->appendAttribute('class', 'btn-default');
+            }
+        }
+        return $el;
     }
 
     // **** intentionally private, do not rely on these as they are workarounds on IControl interface deficiencies
@@ -410,5 +463,19 @@ class BootstrapRenderer implements IExtendedFormRenderer
     {
         $id = SecureCallHelper::tryCall($control, 'getHtmlId') ?: ('-anonymous-' . (self::$uniqueDescriptionId++));
         return 'describe-' . $id;
+    }
+
+    private function hasButtonTypeClass(Html $el)
+    {
+        $classes = $el->getAttribute('class');
+        if (is_string($classes)) {
+            $classes = explode(' ', $classes);
+        }
+        foreach ($classes as $class) {
+            if (NStrings::startsWith($class, 'btn-')) {
+                return TRUE;
+            }
+        }
+        return FALSE;
     }
 }
