@@ -371,6 +371,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
         if (!method_exists($control, 'getControl')) {
             return Html::el();
         }
+        /** @var Html $el */
         $el = $control->getControl();
         if ($el instanceof Html) {
             $el->appendAttribute('class', static::FORM_CONTROL_CLASS);
