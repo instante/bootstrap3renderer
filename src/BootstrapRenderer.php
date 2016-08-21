@@ -4,7 +4,6 @@ namespace Instante\Bootstrap3Renderer;
 
 use Instante\Bootstrap3Renderer\Utils\PlaceholderHtml;
 use Instante\ExtendedFormMacros\IExtendedFormRenderer;
-use Instante\Helpers\ArrayHelper;
 use Instante\Helpers\SecureCallHelper;
 use Instante\Helpers\Strings;
 use /** @noinspection PhpInternalEntityUsedInspection */
@@ -19,7 +18,6 @@ use Nette\InvalidStateException;
 use Nette\NotSupportedException;
 use Nette\SmartObject;
 use Nette\Utils\Html;
-use Nette\Utils\Strings as NStrings;
 use SplObjectStorage;
 use Traversable;
 
