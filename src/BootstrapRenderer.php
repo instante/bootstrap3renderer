@@ -199,8 +199,17 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
     public function renderControlErrors(IControl $control)
     {
-        //TODO
-        return '[ERRORS]';
+        $container = clone $this->prototypes->getControlErrors();
+        foreach ($control->getErrors() as $error) {
+            $el = clone $this->prototypes->getControlError();
+            if ($error instanceof Html) {
+                $el->getPlaceholder()->addHtml($error);
+            } else {
+                $el->getPlaceholder()->addText($error);
+            }
+            $container->getPlaceholder()->addHtml($el);
+        }
+        return $container;
     }
 
     /**
@@ -214,11 +223,11 @@ class BootstrapRenderer implements IExtendedFormRenderer
         foreach ($errors as $error) {
             $alert = clone $this->prototypes->getGlobalError();
             if ($error instanceof Html) {
-                $alert->addHtml($error);
+                $alert->getPlaceholder()->addHtml($error);
             } else {
-                $alert->addText($error);
+                $alert->getPlaceholder()->addText($error);
             }
-            $container->addHtml($alert);
+            $container->getPlaceholder()->addHtml($alert);
         }
         return $container;
     }

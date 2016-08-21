@@ -26,3 +26,9 @@ Assert::notContains('ctrlFoo', $global);
 $all = (string)$renderer->renderGlobalErrors(FALSE);
 Assert::contains('globalFoo', $all);
 Assert::contains('ctrlFoo', $all);
+
+$form->addError('<br>');
+Assert::contains('&lt;br&gt;', (string)$renderer->renderGlobalErrors(TRUE));
+
+$form->addError(Html::el('hr'));
+Assert::contains('<hr', (string)$renderer->renderGlobalErrors(TRUE));

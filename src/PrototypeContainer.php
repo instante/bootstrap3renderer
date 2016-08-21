@@ -36,6 +36,12 @@ class PrototypeContainer
     /** @var PlaceholderHtml */
     private $globalErrors;
 
+    /** @var PlaceholderHtml */
+    private $controlError;
+
+    /** @var PlaceholderHtml */
+    private $controlErrors;
+
     public static function createDefault()
     {
         $c = new static;
@@ -58,6 +64,8 @@ class PrototypeContainer
             'role' => 'alert',
         ])->addHtml('<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
             . '<span aria-hidden="true">&times;</span></button>');
+        $c->controlError = PlaceholderHtml::el('span', ['class' => 'help-block text-danger']);
+        $c->controlErrors = PlaceholderHtml::el();
         return $c;
     }
 
@@ -154,6 +162,38 @@ class PrototypeContainer
     public function setGlobalErrors(PlaceholderHtml $globalErrors)
     {
         $this->globalErrors = $globalErrors;
+        return $this;
+    }
+
+    /** @return PlaceholderHtml */
+    public function getControlError()
+    {
+        return $this->controlError;
+    }
+
+    /**
+     * @param PlaceholderHtml $controlError
+     * @return $this
+     */
+    public function setControlError(PlaceholderHtml $controlError)
+    {
+        $this->controlError = $controlError;
+        return $this;
+    }
+
+    /** @return PlaceholderHtml */
+    public function getControlErrors()
+    {
+        return $this->controlErrors;
+    }
+
+    /**
+     * @param PlaceholderHtml $controlErrors
+     * @return $this
+     */
+    public function setControlErrors(PlaceholderHtml $controlErrors)
+    {
+        $this->controlErrors = $controlErrors;
         return $this;
     }
 }

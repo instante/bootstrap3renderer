@@ -19,6 +19,7 @@ $control->shouldReceive('getHtmlId')->andReturn('myid');
 $control->shouldReceive('getOption')->with('description')->andReturn('myid');
 $control->shouldReceive('getRules->check');
 $control->shouldReceive('getForm')->andReturn($form);
+$control->shouldReceive('getErrors')->andReturn([]);
 $form->addComponent($control, 'a');
 $renderer->renderBegin($form);
 
