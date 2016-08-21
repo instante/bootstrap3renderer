@@ -203,10 +203,24 @@ class BootstrapRenderer implements IExtendedFormRenderer
         return '[ERRORS]';
     }
 
+    /**
+     * @param bool $ownOnly - true = render only global errors, false = render all errors of all controls
+     * @return Html
+     */
     public function renderGlobalErrors($ownOnly = TRUE)
     {
-        //TODO
-        return $ownOnly ? '[OWN]' : '[GLOBAL]';
+        $errors = $ownOnly ? $this->form->getOwnErrors() : $this->form->getErrors();
+        $container = clone $this->prototypes->getGlobalErrors();
+        foreach ($errors as $error) {
+            $alert = clone $this->prototypes->getGlobalError();
+            if ($error instanceof Html) {
+                $alert->addHtml($error);
+            } else {
+                $alert->addText($error);
+            }
+            $container->addHtml($alert);
+        }
+        return $container;
     }
 
     public function renderBody()

@@ -30,6 +30,12 @@ class PrototypeContainer
     /** @var PlaceholderHtml */
     private $horizontalButtons;
 
+    /** @var PlaceholderHtml */
+    private $globalError;
+
+    /** @var PlaceholderHtml */
+    private $globalErrors;
+
     public static function createDefault()
     {
         $c = new static;
@@ -46,6 +52,12 @@ class PrototypeContainer
             ->addHtml($buttonsInner)
             ->setPlaceholder($buttonsInner)
             ->setPlaceholder($buttonsInner, 'cols');
+        $c->globalErrors = PlaceholderHtml::el();
+        $c->globalError = PlaceholderHtml::el('div', [
+            'class' => 'alert alert-warning alert-dismissible',
+            'role' => 'alert',
+        ])->addHtml('<button type="button" class="close" data-dismiss="alert" aria-label="Close">'
+            . '<span aria-hidden="true">&times;</span></button>');
         return $c;
     }
 
@@ -110,6 +122,38 @@ class PrototypeContainer
     public function setHorizontalButtons(PlaceholderHtml $horizontalButtons)
     {
         $this->horizontalButtons = $horizontalButtons;
+        return $this;
+    }
+
+    /** @return PlaceholderHtml */
+    public function getGlobalError()
+    {
+        return $this->globalError;
+    }
+
+    /**
+     * @param PlaceholderHtml $globalError
+     * @return $this
+     */
+    public function setGlobalError(PlaceholderHtml $globalError)
+    {
+        $this->globalError = $globalError;
+        return $this;
+    }
+
+    /** @return PlaceholderHtml */
+    public function getGlobalErrors()
+    {
+        return $this->globalErrors;
+    }
+
+    /**
+     * @param PlaceholderHtml $globalErrors
+     * @return $this
+     */
+    public function setGlobalErrors(PlaceholderHtml $globalErrors)
+    {
+        $this->globalErrors = $globalErrors;
         return $this;
     }
 }
