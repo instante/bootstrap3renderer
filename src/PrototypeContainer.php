@@ -45,7 +45,7 @@ class PrototypeContainer
         $c->horizontalButtons = PlaceholderHtml::el('div', ['class' => 'form-group'])
             ->addHtml($buttonsInner)
             ->setPlaceholder($buttonsInner)
-            ->setPlaceholder('cols', $buttonsInner);
+            ->setPlaceholder($buttonsInner, 'cols');
         return $c;
     }
 

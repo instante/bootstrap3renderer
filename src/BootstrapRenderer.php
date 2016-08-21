@@ -420,7 +420,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
     {
         $description = $this->getControlDescription($control);
         if ($description === NULL) {
-            return '';
+            return Html::el();
         }
         $el = clone $this->prototypes->controlDescription;
         return $el

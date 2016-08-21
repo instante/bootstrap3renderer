@@ -26,7 +26,7 @@ $renderer->renderBegin($form);
 Assert::contains('theCtrl', $renderer->renderBody());
 Assert::notContains('theCtrl', $renderer->renderBody());
 
-Assert::type('string', $renderer->renderControl($control));
-Assert::contains('class="form-control"', $renderer->renderControl($control));
-Assert::contains('aria-describedby="describe-myid"', $renderer->renderControl($control, TRUE));
+Assert::type(Html::class, $renderer->renderControl($control));
+Assert::contains('class="form-control"', (string)$renderer->renderControl($control));
+Assert::contains('aria-describedby="describe-myid"', (string)$renderer->renderControl($control, TRUE));
 

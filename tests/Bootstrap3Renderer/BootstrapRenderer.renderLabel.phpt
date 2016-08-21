@@ -19,14 +19,14 @@ $control->shouldReceive('getLabel')->atLeast()->once()
 
 $renderer->setRenderMode(RenderModeEnum::VERTICAL);
 $rendered = $renderer->renderLabel($control);
-Assert::type('string', $rendered);
-Assert::contains('foo', $rendered);
+Assert::type(Html::class, $rendered);
+Assert::contains('foo', (string)$rendered);
 
 $renderer->setRenderMode(RenderModeEnum::HORIZONTAL);
 $renderer->setLabelColumns(3);
 $renderer->setColumnMinScreenSize(ScreenSizeEnum::SM);
 $rendered = $renderer->renderLabel($control);
-Assert::type('string', $rendered);
-Assert::contains('foo', $rendered);
+Assert::type(Html::class, $rendered);
+Assert::contains('foo', (string)$rendered);
 Assert::null($label->getAttribute('class')); //label's attribute was not written into prototype
-Assert::contains('col-sm-3', $rendered);
+Assert::contains('col-sm-3', (string)$rendered);
