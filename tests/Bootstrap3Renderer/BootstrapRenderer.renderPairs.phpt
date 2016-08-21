@@ -21,7 +21,7 @@ class PairsTestingBootstrapRenderer extends BootstrapRenderer
         return $control->getValue();
     }
 
-    protected function renderButtons(array $buttons)
+    public function renderButtons(array $buttons)
     {
         return implode(':', array_map(function (IControl $button) {
             return $button->getValue();

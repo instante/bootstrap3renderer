@@ -4,6 +4,7 @@ namespace Instante\Bootstrap3Renderer;
 
 use Instante\Bootstrap3Renderer\Utils\PlaceholderHtml;
 use Instante\ExtendedFormMacros\IExtendedFormRenderer;
+use Instante\Helpers\ArrayHelper;
 use Instante\Helpers\SecureCallHelper;
 use Instante\Helpers\Strings;
 use /** @noinspection PhpInternalEntityUsedInspection */
@@ -472,15 +473,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
     private function hasButtonTypeClass(Html $el)
     {
-        $classes = $el->getAttribute('class');
-        if (is_string($classes)) {
-            $classes = explode(' ', $classes);
-        }
-        foreach ($classes as $class) {
-            if (NStrings::startsWith($class, 'btn-')) {
-                return TRUE;
-            }
-        }
-        return FALSE;
+        $rendered = $el->startTag();
+        return preg_match('~class="[^"]*\bbtn-[a-z]+\b~', $rendered);
     }
 }
