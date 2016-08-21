@@ -321,10 +321,14 @@ class BootstrapRenderer implements IExtendedFormRenderer
                 || $control->getForm() === $this->form); //belonging to this form
     }
 
-    protected function renderButtons(array $buttons)
+    /**
+     * @param IControl[] $buttons
+     * @return Html
+     */
+    public function renderButtons(array $buttons)
     {
         if (count($buttons) === 0) {
-            return '';
+            return Html::el();
         }
         if ($this->renderMode === RenderModeEnum::HORIZONTAL) {
             $container = clone $this->prototypes->horizontalButtons;
