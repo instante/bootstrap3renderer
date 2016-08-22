@@ -5,6 +5,7 @@ namespace InstanteTests\Bootstrap3Renderer;
 use Instante\Bootstrap3Renderer\BootstrapRenderer;
 use Instante\Bootstrap3Renderer\RenderModeEnum;
 use Instante\Bootstrap3Renderer\ScreenSizeEnum;
+use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\Utils\Html;
 use Tester\Assert;
@@ -22,6 +23,7 @@ function getPartialMockRenderer($control)
     $mock->shouldReceive('renderLabel')->with($control)->once()->andReturn('[label]');
     $mock->shouldReceive('renderControlErrors')->with($control)->once()->andReturn('[errors]');
     $mock->shouldReceive('renderControlDescription')->with($control)->once()->andReturn('[desc]');
+    $mock->renderBegin(new Form);
     return $mock;
 }
 

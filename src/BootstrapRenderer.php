@@ -108,6 +108,8 @@ class BootstrapRenderer implements IExtendedFormRenderer
      */
     public function renderPair(IControl $control)
     {
+        $this->assertInForm();
+
         $pair = clone $this->prototypes->pair;
         $pair->getPlaceholder('label')->addHtml($this->renderLabel($control));
         $ctrlHtml = $this->renderControl($control, TRUE);
@@ -125,6 +127,8 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
     public function renderGroup(ControlGroup $group)
     {
+        $this->assertInForm();
+
         $el = clone $this->prototypes->getControlGroup();
 
         //group label
@@ -153,9 +157,11 @@ class BootstrapRenderer implements IExtendedFormRenderer
         return $el;
     }
 
-    public function renderContainer(Container $control)
+    public function renderContainer(Container $container)
     {
-        // TODO: Implement renderContainer() method.
+        $this->assertInForm();
+
+        return $this->renderPairs($container->getControls());
     }
 
     public function render(Form $form, $mode = NULL)
@@ -256,6 +262,8 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
     public function renderBody()
     {
+        $this->assertInForm();
+
         $groups = $this->renderGroups();
         $groupless = $this->renderPairs($this->form->getControls());
 
@@ -431,6 +439,8 @@ class BootstrapRenderer implements IExtendedFormRenderer
      */
     public function renderControl(IControl $control, $renderedDescription = FALSE)
     {
+        $this->assertInForm();
+
         $this->renderedControls->attach($control);
         if (!method_exists($control, 'getControl')) {
             return Html::el();
@@ -496,6 +506,8 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
     public function renderButton(IControl $button)
     {
+        $this->assertInForm();
+
         /** @var Html $el */
         $el = SecureCallHelper::tryCall($button, 'getControl');
         if ($el === NULL) {

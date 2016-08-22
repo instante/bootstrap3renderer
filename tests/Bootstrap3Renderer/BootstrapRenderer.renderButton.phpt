@@ -18,6 +18,7 @@ $barButton = new Button('BarCaption');
 $renderer = new BootstrapRenderer;
 $form->addComponent($submitFooButton, 'foo')
     ->addComponent($barButton, 'bar');
+$renderer->renderBegin($form);
 
 //render submit button as btn-primary
 $submit = $renderer->renderButton($submitFooButton);
