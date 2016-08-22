@@ -47,6 +47,42 @@ class PlaceholderHtml extends Html
         }
     }
 
+    /**
+     * Removes Html element anywhere from descendant structure
+     *
+     * @param Html $el
+     * @param bool $all - if true, removes all occurrences
+     */
+    public function removeDescendant(Html $el, $all = FALSE)
+    {
+        self::_removeDescendant($el, $this, $all);
+    }
+
+    private static function _removeDescendant(Html $el, Html $target, $all)
+    {
+        foreach ($target->getChildren() as $index => $child) {
+            if ($child instanceof Html) {
+                if ($child === $el) {
+                    if ($all) {
+                        unset($target->children[$index]);
+                        $unset = TRUE;
+                    } else {
+                        unset($target[$index]);
+                        return TRUE;
+                    }
+                } else {
+                    if (self::_removeDescendant($el, $child, $all) && !$all) {
+                        return TRUE;
+                    }
+                }
+            }
+        }
+        if (isset($unset)) {
+            $target->children = array_values($target->children);
+        }
+        return FALSE;
+    }
+
     public function __clone()
     {
         parent::__clone();
