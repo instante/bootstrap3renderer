@@ -116,6 +116,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
     public function renderPair(IControl $control)
     {
         $this->assertInForm();
+        $this->renderedControls->attach($control);
 
         return $this->getControlRenderer($control)->renderPair($control);
     }
@@ -425,13 +426,12 @@ class BootstrapRenderer implements IExtendedFormRenderer
     public function renderControl(IControl $control, $renderedDescription = FALSE)
     {
         $this->assertInForm();
-
         $this->renderedControls->attach($control);
+
         return $this->getControlRenderer($control)->renderControl($control, $renderedDescription);
     }
 
     /**
-     * @internal
      * @param int $numberColumns
      * @return string
      */
@@ -447,7 +447,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
      * @param int $numberColumns
      * @return string
      */
-    protected function getOffsetClass($numberColumns)
+    public function getOffsetClass($numberColumns)
     {
         return Strings::format(static::COLUMNS_OFFSET_PATTERN, [
             'size' => $this->columnMinScreenSize,

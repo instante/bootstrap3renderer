@@ -12,24 +12,21 @@ use Nette\Utils\Html;
 class DefaultControlRenderer implements IControlRenderer
 {
     /** @var BootstrapRenderer */
-    private $bootstrapRenderer;
+    protected $bootstrapRenderer;
 
     public function __construct(BootstrapRenderer $bootstrapRenderer)
     {
         $this->bootstrapRenderer = $bootstrapRenderer;
     }
 
-    /**
-     * @param IControl $control
-     * @return Html
-     */
+    /** @inheritdoc */
     public function renderPair(IControl $control)
     {
         $r = $this->bootstrapRenderer;
 
         $pair = clone $r->getPrototypes()->pair;
-        $pair->getPlaceholder('label')->addHtml($r->renderLabel($control));
-        $ctrlHtml = $r->renderControl($control, TRUE);
+        $pair->getPlaceholder('label')->addHtml($this->renderLabel($control));
+        $ctrlHtml = $this->renderControl($control, TRUE);
         if ($r->getRenderMode() === RenderModeEnum::HORIZONTAL) {
             // wrap in bootstrap columns
             $ctrlHtml = Html::el('div')
@@ -42,6 +39,7 @@ class DefaultControlRenderer implements IControlRenderer
         return $pair;
     }
 
+    /** @inheritdoc */
     public function renderControl(IControl $control, $renderedDescription = FALSE)
     {
         if (!method_exists($control, 'getControl')) {
@@ -61,10 +59,7 @@ class DefaultControlRenderer implements IControlRenderer
         return $el;
     }
 
-    /**
-     * @param IControl $control
-     * @return Html
-     */
+    /** @inheritdoc */
     public function renderLabel(IControl $control)
     {
         $r = $this->bootstrapRenderer;
