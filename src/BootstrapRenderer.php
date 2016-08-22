@@ -559,7 +559,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
     private function getGroupsToRender()
     {
         $groups = array_filter($this->form->getGroups(), function (ControlGroup $group) {
-            return $group->getControls() && !$group->getOption('visual');
+            return $group->getControls() && $group->getOption('visual');
         });
         return $groups;
     }

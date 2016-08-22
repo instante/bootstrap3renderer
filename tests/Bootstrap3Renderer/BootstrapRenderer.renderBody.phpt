@@ -10,7 +10,7 @@ require_once __DIR__ . '/../bootstrap.php';
 
 class BodyTestingBootstrapRenderer extends BootstrapRenderer
 {
-    public function renderGroups()
+    public function renderGroups(array $groups = NULL)
     {
         return '<GROUPS>';
     }

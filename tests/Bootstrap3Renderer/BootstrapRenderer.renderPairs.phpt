@@ -63,4 +63,4 @@ $controls = [
     fakeButton('b3'),
 ];
 
-Assert::match('~first\s*second\s*b1:b2\s*third\s*b3~', $renderer->renderPairs($controls));
+Assert::match('~first\s*second\s*b1:b2\s*third\s*b3~', (string)$renderer->renderPairs($controls));

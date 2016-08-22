@@ -75,12 +75,12 @@ class PrototypeContainer
         $c->controlError = PlaceholderHtml::el('span', ['class' => 'help-block text-danger']);
         $c->controlErrors = PlaceholderHtml::el();
 
-        $legend = Html::el('legend');
+        $label = Html::el('legend');
         $description = Html::el('p');
         $c->controlGroup = PlaceholderHtml::el('fieldset')
-            ->addHtml($legend)
+            ->addHtml($label)
             ->addHtml($description)
-            ->setPlaceholder($legend, 'legend')
+            ->setPlaceholder($label, 'label')
             ->setPlaceholder($description, 'description');
 
         return $c;
