@@ -28,6 +28,11 @@ use Traversable;
  * $form->setRenderer(new Instante\Bootstrap3Renderer\BootstrapRenderer);
  * </code>
  *
+ * TODO individual render classes for special controls (checkbox, checkboxlist, radiolist etc)
+ * TODO override latte form macros to be passed to renderer router
+ * TODO form error (and other) states
+ * TODO integration tests for complex render
+ *
  * @property PrototypeContainer $prototypes
  */
 class BootstrapRenderer implements IExtendedFormRenderer
