@@ -123,9 +123,34 @@ class BootstrapRenderer implements IExtendedFormRenderer
         return $pair;
     }
 
-    public function renderGroup(ControlGroup $control)
+    public function renderGroup(ControlGroup $group)
     {
-        // TODO: Implement renderGroup() method.
+        $el = clone $this->prototypes->getControlGroup();
+
+        //group label
+        $label = $group->getOption('label');
+        if ($label) {
+            $this->addContent($el->getPlaceholder('label'), $label);
+        } else {
+            $el->removePlaceholder('label');
+        }
+
+        // group description
+        $description = $group->getOption('description');
+        if ($description) {
+            $this->addContent($el->getPlaceholder('description'), $description);
+        } else {
+            $el->removePlaceholder('description');
+        }
+
+        // master element attributes
+        $groupAttrs = $group->getOption('container', Html::el())->setName(NULL);
+        $el->addAttributes($groupAttrs->attrs);
+
+        // group content
+        $el->addHtml($this->renderPairs($group->getControls()));
+
+        return $el;
     }
 
     public function renderContainer(Container $control)
@@ -207,11 +232,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
         $container = clone $this->prototypes->getControlErrors();
         foreach ($control->getErrors() as $error) {
             $el = clone $this->prototypes->getControlError();
-            if ($error instanceof Html) {
-                $el->getPlaceholder()->addHtml($error);
-            } else {
-                $el->getPlaceholder()->addText($error);
-            }
+            $this->addContent($el->getPlaceholder(), $error);
             $container->getPlaceholder()->addHtml($el);
         }
         return $container;
@@ -227,11 +248,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
         $container = clone $this->prototypes->getGlobalErrors();
         foreach ($errors as $error) {
             $alert = clone $this->prototypes->getGlobalError();
-            if ($error instanceof Html) {
-                $alert->getPlaceholder()->addHtml($error);
-            } else {
-                $alert->getPlaceholder()->addText($error);
-            }
+            $this->addContent($alert->getPlaceholder(), $error);
             $container->getPlaceholder()->addHtml($alert);
         }
         return $container;
@@ -310,31 +327,47 @@ class BootstrapRenderer implements IExtendedFormRenderer
         return $this;
     }
 
-    public function renderGroups()
+    /**
+     * @param ControlGroup[] $groups
+     * @return Html
+     */
+    public function renderGroups(array $groups = NULL)
     {
-        return '[GROUPS]';
+        if ($groups === NULL) {
+            $groups = $this->getGroupsToRender();
+        }
+        $result = Html::el();
+        foreach ($groups as $group) {
+            $result->addHtml($this->renderGroup($group));
+        }
+        return $result;
     }
+
 
     /**
      * @param IControl[]|Traversable $controls
-     * @return string
+     * @return Html
      */
     protected function renderPairs($controls)
     {
         $buttons = [];
-        $ret = '';
+        $ret = Html::el();
         foreach ($controls as $control) {
             if ($this->shouldRender($control)) {
                 if ($this->isButton($control)) {
                     $buttons[] = $control;
                 } else {
-                    $ret .= $this->renderButtons($buttons);
-                    $ret .= $this->renderPair($control);
+                    if (count($buttons) > 0) {
+                        $ret->addHtml($this->renderButtons($buttons));
+                    }
+                    $ret->addHtml($this->renderPair($control));
                     $buttons = [];
                 }
             }
         }
-        $ret .= $this->renderButtons($buttons);
+        if (count($buttons) > 0) {
+            $ret->addHtml($this->renderButtons($buttons));
+        }
         return $ret;
     }
 
@@ -455,10 +488,10 @@ class BootstrapRenderer implements IExtendedFormRenderer
             return Html::el();
         }
         $el = clone $this->prototypes->controlDescription;
-        return $el
-            ->getPlaceholder()
-            ->setAttribute('id', $this->getDescriptionId($control))
-            ->addHtml($description);
+        $elDescription = $el->getPlaceholder();
+        $elDescription->setAttribute('id', $this->getDescriptionId($control));
+        $this->addContent($elDescription, $description);
+        return $el;
     }
 
     public function renderButton(IControl $button)
@@ -475,6 +508,21 @@ class BootstrapRenderer implements IExtendedFormRenderer
             } else {
                 $el->appendAttribute('class', 'btn-default');
             }
+        }
+        return $el;
+    }
+
+    /**
+     * @param Html $el
+     * @param Html|string $content
+     * @return Html fluent interface
+     */
+    private function addContent(Html $el, $content)
+    {
+        if ($content instanceof Html) {
+            $el->addHtml($content);
+        } else {
+            $el->addText($content);
         }
         return $el;
     }
@@ -501,5 +549,18 @@ class BootstrapRenderer implements IExtendedFormRenderer
     {
         $rendered = $el->startTag();
         return preg_match('~class="[^"]*\bbtn-[a-z]+\b~', $rendered);
+    }
+
+    /**
+     * Determines which groups should be rendered (visual groups with at least one control).
+     *
+     * @return ControlGroup[]
+     */
+    private function getGroupsToRender()
+    {
+        $groups = array_filter($this->form->getGroups(), function (ControlGroup $group) {
+            return $group->getControls() && !$group->getOption('visual');
+        });
+        return $groups;
     }
 }

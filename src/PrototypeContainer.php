@@ -13,6 +13,11 @@ use Nette\Utils\Html;
  * @property PlaceholderHtml $emptyLabel
  * @property PlaceholderHtml $controlDescription
  * @property PlaceholderHtml $horizontalButtons
+ * @property PlaceholderHtml $globalError
+ * @property PlaceholderHtml $globalErrors
+ * @property PlaceholderHtml $controlError
+ * @property PlaceholderHtml $controlErrors
+ * @property PlaceholderHtml $controlGroup
  */
 class PrototypeContainer
 {
@@ -42,6 +47,9 @@ class PrototypeContainer
     /** @var PlaceholderHtml */
     private $controlErrors;
 
+    /** @var PlaceholderHtml */
+    private $controlGroup;
+
     public static function createDefault()
     {
         $c = new static;
@@ -66,6 +74,15 @@ class PrototypeContainer
             . '<span aria-hidden="true">&times;</span></button>');
         $c->controlError = PlaceholderHtml::el('span', ['class' => 'help-block text-danger']);
         $c->controlErrors = PlaceholderHtml::el();
+
+        $legend = Html::el('legend');
+        $description = Html::el('p');
+        $c->controlGroup = PlaceholderHtml::el('fieldset')
+            ->addHtml($legend)
+            ->addHtml($description)
+            ->setPlaceholder($legend, 'legend')
+            ->setPlaceholder($description, 'description');
+
         return $c;
     }
 
@@ -194,6 +211,22 @@ class PrototypeContainer
     public function setControlErrors(PlaceholderHtml $controlErrors)
     {
         $this->controlErrors = $controlErrors;
+        return $this;
+    }
+
+    /** @return PlaceholderHtml */
+    public function getControlGroup()
+    {
+        return $this->controlGroup;
+    }
+
+    /**
+     * @param PlaceholderHtml $controlGroup
+     * @return $this
+     */
+    public function setControlGroup(PlaceholderHtml $controlGroup)
+    {
+        $this->controlGroup = $controlGroup;
         return $this;
     }
 }

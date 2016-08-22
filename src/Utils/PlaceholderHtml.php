@@ -51,11 +51,22 @@ class PlaceholderHtml extends Html
      * Removes Html element anywhere from descendant structure
      *
      * @param Html $el
-     * @param bool $all - if true, removes all occurrences
+     * @param bool $all search for and remove all occurrences
      */
     public function removeDescendant(Html $el, $all = FALSE)
     {
         self::_removeDescendant($el, $this, $all);
+    }
+
+    /**
+     * Removes the placeholder html element from descendant structure
+     *
+     * @param string $name
+     * @param bool $all search for and remove all occurrences
+     */
+    public function removePlaceholder($name, $all = FALSE)
+    {
+        $this->removeDescendant($this->getPlaceholder($name), $all);
     }
 
     private static function _removeDescendant(Html $el, Html $target, $all)
