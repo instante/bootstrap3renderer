@@ -2,7 +2,9 @@
 
 namespace Instante\Bootstrap3Renderer;
 
+use Instante\Bootstrap3Renderer\Controls\DefaultControlRenderer;
 use Instante\Bootstrap3Renderer\Utils\PlaceholderHtml;
+use Instante\ExtendedFormMacros\IControlRenderer;
 use Instante\ExtendedFormMacros\IExtendedFormRenderer;
 use Instante\Helpers\SecureCallHelper;
 use Instante\Helpers\Strings;
@@ -61,6 +63,8 @@ class BootstrapRenderer implements IExtendedFormRenderer
      */
     public $errorsAtInputs = TRUE;
 
+    public $controlRenderers = [];
+
     /** @var Form */
     protected $form;
 
@@ -84,6 +88,9 @@ class BootstrapRenderer implements IExtendedFormRenderer
     {
         $this->renderMode = $renderMode;
         $this->prototypes = $prototypes ?: PrototypeContainer::createDefault();
+        $this->controlRenderers = [
+            '*' => new DefaultControlRenderer($this),
+        ];
     }
 
     /** @return PrototypeContainer */
@@ -110,19 +117,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
     {
         $this->assertInForm();
 
-        $pair = clone $this->prototypes->pair;
-        $pair->getPlaceholder('label')->addHtml($this->renderLabel($control));
-        $ctrlHtml = $this->renderControl($control, TRUE);
-        if ($this->renderMode === RenderModeEnum::HORIZONTAL) {
-            // wrap in bootstrap columns
-            $ctrlHtml = Html::el('div')
-                ->appendAttribute('class', $this->getColumnsClass($this->inputColumns))
-                ->addHtml($ctrlHtml);
-        }
-        $pair->getPlaceholder('control')->addHtml($ctrlHtml);
-        $pair->getPlaceholder('errors')->addHtml($this->renderControlErrors($control));
-        $pair->getPlaceholder('description')->addHtml($this->renderControlDescription($control));
-        return $pair;
+        return $this->getControlRenderer($control)->renderPair($control);
     }
 
     public function renderGroup(ControlGroup $group)
@@ -419,17 +414,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
      */
     public function renderLabel(IControl $control)
     {
-        $el = SecureCallHelper::tryCall($control, 'getLabel');
-        if ($el === NULL) {
-            $el = clone $this->prototypes->emptyLabel;
-            if (method_exists($control, 'getHtmlId')) {
-                $el->getPlaceholder()->setAttribute('for', $control->getHtmlId());
-            }
-        }
-        if ($el instanceof Html && $this->renderMode === RenderModeEnum::HORIZONTAL) {
-            $el->appendAttribute('class', $this->getColumnsClass($this->labelColumns));
-        }
-        return $el;
+        return $this->getControlRenderer($control)->renderLabel($control);
     }
 
     /**
@@ -442,23 +427,15 @@ class BootstrapRenderer implements IExtendedFormRenderer
         $this->assertInForm();
 
         $this->renderedControls->attach($control);
-        if (!method_exists($control, 'getControl')) {
-            return Html::el();
-        }
-        /** @var Html $el */
-        $el = $control->getControl();
-        if ($el instanceof Html) {
-            $el->appendAttribute('class', static::FORM_CONTROL_CLASS);
-            if ($renderedDescription && $this->getControlDescription($control) !== NULL) {
-                $el->setAttribute('aria-describedby', $this->getDescriptionId($control));
-            }
-        } else {
-            $el = Html::el()->addHtml($el);
-        }
-        return $el;
+        return $this->getControlRenderer($control)->renderControl($control, $renderedDescription);
     }
 
-    protected function getColumnsClass($numberColumns)
+    /**
+     * @internal
+     * @param int $numberColumns
+     * @return string
+     */
+    public function getColumnsClass($numberColumns)
     {
         return Strings::format(static::COLUMNS_CLASS_PATTERN, [
             'size' => $this->columnMinScreenSize,
@@ -466,6 +443,10 @@ class BootstrapRenderer implements IExtendedFormRenderer
         ]);
     }
 
+    /**
+     * @param int $numberColumns
+     * @return string
+     */
     protected function getOffsetClass($numberColumns)
     {
         return Strings::format(static::COLUMNS_OFFSET_PATTERN, [
@@ -524,6 +505,54 @@ class BootstrapRenderer implements IExtendedFormRenderer
         return $el;
     }
 
+    /** @return int */
+    public function getLabelColumns()
+    {
+        return $this->labelColumns;
+    }
+
+    /** @return int */
+    public function getInputColumns()
+    {
+        return $this->inputColumns;
+    }
+
+    /**
+     * @param IControl $control
+     * @return IControlRenderer
+     */
+    protected function getControlRenderer(IControl $control)
+    {
+        $renderer = SecureCallHelper::tryCall($control, 'getOption', 'renderer');
+        if ($renderer instanceof IControlRenderer) {
+            return $renderer;
+        }
+
+        foreach ($this->controlRenderers as $key => $val) {
+            if ($key === '*') {
+                continue;
+            }
+            if ($control instanceof $key) {
+                SecureCallHelper::tryCall($control, 'setOption', 'renderer', $renderer); //try to cache the renderer to the control
+                return $val;
+            }
+        }
+        $renderer = $this->controlRenderers['*'];
+        SecureCallHelper::tryCall($control, 'setOption', 'renderer', $renderer);
+        return $renderer;
+    }
+
+    public function getControlDescription(IControl $control)
+    {
+        return SecureCallHelper::tryCall($control, 'getOption', 'description');
+    }
+
+    public function getDescriptionId(IControl $control)
+    {
+        $id = SecureCallHelper::tryCall($control, 'getHtmlId') ?: ('-anonymous-' . (self::$uniqueDescriptionId++));
+        return 'describe-' . $id;
+    }
+
     /**
      * @param Html $el
      * @param Html|string $content
@@ -544,17 +573,6 @@ class BootstrapRenderer implements IExtendedFormRenderer
     private function isButton(IControl $control)
     {
         return SecureCallHelper::tryCall($control, 'getOption', 'type') === 'button';
-    }
-
-    private function getControlDescription(IControl $control)
-    {
-        return SecureCallHelper::tryCall($control, 'getOption', 'description');
-    }
-
-    private function getDescriptionId(IControl $control)
-    {
-        $id = SecureCallHelper::tryCall($control, 'getHtmlId') ?: ('-anonymous-' . (self::$uniqueDescriptionId++));
-        return 'describe-' . $id;
     }
 
     private function hasButtonTypeClass(Html $el)
