@@ -12,5 +12,13 @@ use Tester\Environment;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-//TODO
-Environment::skip('TODO');
+$renderer = new CheckboxRenderer($bsr = new BootstrapRenderer);
+
+$form = new Form;
+$form->addCheckbox('foo', 'FooBox');
+$bsr->renderBegin($form);
+
+$pair = $renderer->renderCheckboxInLabel($form['foo']);
+Assert::type(Html::class, $pair);
+Assert::same('label', $pair->getName());
+Assert::same('input', $pair[0]->getName());
