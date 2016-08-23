@@ -27,7 +27,7 @@ function getPartialMockRenderer($control, BootstrapRenderer &$bsrMock = NULL)
         $bsrMock = mock(BootstrapRenderer::class . '[renderControlErrors,renderControlDescription]'),
     ]);
     $bsrMock->controlRenderers['*'] = $mock;
-    $mock->shouldReceive('renderControl')->with($control, TRUE)->once()->andReturn('[ctrl]');
+    $mock->shouldReceive('renderControl')->with($control, TRUE)->once()->andReturn(Html::el()->addText('[ctrl]'));
     $mock->shouldReceive('renderLabel')->with($control)->once()->andReturn('[label]');
     $bsrMock->shouldReceive('renderControlErrors')->with($control)->once()->andReturn('[errors]');
     $bsrMock->shouldReceive('renderControlDescription')->with($control)->once()->andReturn('[desc]');

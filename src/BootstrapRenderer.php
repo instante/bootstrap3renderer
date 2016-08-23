@@ -34,6 +34,9 @@ use Traversable;
  * TODO override latte form macros to be passed to renderer router
  * TODO form error (and other) states
  * TODO integration tests for complex render
+ * TODO support for label-attr and input-attr attributes to pair macro
+ *
+ * BACKLOG add support for simple rendering of styled checkbox and radio elements
  *
  * @property PrototypeContainer $prototypes
  */

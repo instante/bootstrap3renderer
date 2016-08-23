@@ -5,6 +5,7 @@ namespace InstanteTests\Bootstrap3Renderer;
 use Instante\Bootstrap3Renderer\BootstrapRenderer;
 use Instante\Bootstrap3Renderer\Controls\CheckboxRenderer;
 use Instante\Bootstrap3Renderer\RenderModeEnum;
+use Instante\Bootstrap3Renderer\ScreenSizeEnum;
 use Mockery\MockInterface;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
@@ -20,7 +21,7 @@ $renderer = mock(CheckboxRenderer::class . '[renderCheckboxInLabel]',
 /** @var CheckboxRenderer|MockInterface $renderer */
 /** @var BootstrapRenderer|MockInterface $bsr */
 
-$renderer->shouldReceive('renderCheckboxInLabel')->with($form['foo'])->andReturn('[checkboxInLabel]');
+$renderer->shouldReceive('renderCheckboxInLabel')->with($form['foo'])->andReturn(Html::el()->addText('[checkboxInLabel]'));
 $bsr->shouldReceive('renderControlErrors')->with($form['foo'])->andReturn('[errors]');
 
 $bsr->renderBegin($form);
@@ -42,8 +43,17 @@ Assert::contains('[checkboxInLabel]', $rendered);
 Assert::contains('[errors]', $rendered);
 Assert::contains('[desc]', $rendered);
 
-// TODO test column wrapper in and only in horizontal mode
+// test column wrapper in and only in horizontal mode
+$bsr->setColumnMinScreenSize(ScreenSizeEnum::SM);
+$bsr->setLabelColumns(4);
 Assert::notContains('col-', (string)$pair);
+
+
 $bsr->setRenderMode(RenderModeEnum::HORIZONTAL);
-Assert::contains('col-', (string)$renderer->renderPair($form['foo']));
+$pairH = $renderer->renderPair($form['foo']);
+Assert::contains('col-sm-8', (string)$pairH);
+Assert::contains('col-sm-offset-4', (string)$pairH);
+
+Assert::contains('[errors]', (string)$pairH[0]);
+Assert::contains('[desc]', (string)$pairH[0]);
 

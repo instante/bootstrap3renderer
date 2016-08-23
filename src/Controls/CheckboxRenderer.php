@@ -28,14 +28,9 @@ class CheckboxRenderer extends DefaultControlRenderer
         $label = $this->renderCheckboxInLabel($control);
         $cb = Html::el('div', ['class' => 'checkbox']);
         $cb->addHtml($label);
+        $wrapper = $this->wrapControlInColumnsGrid($pair, $cb);
         if ($r->getRenderMode() === RenderModeEnum::HORIZONTAL) {
-            // wrap in bootstrap columns
-            $wrapper = Html::el('div')
-                ->appendAttribute('class', $r->getColumnsClass($r->getInputColumns()))
-                ->appendAttribute('class', $r->getOffsetClass($r->getLabelColumns()))
-                ->addHtml($cb);
-        } else {
-            $wrapper = $cb;
+            $wrapper->appendAttribute('class', $r->getOffsetClass($r->getLabelColumns()));
         }
 
         $pair->getPlaceholder('control')->addHtml($wrapper);

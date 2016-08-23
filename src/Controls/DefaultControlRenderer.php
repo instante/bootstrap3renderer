@@ -4,6 +4,7 @@ namespace Instante\Bootstrap3Renderer\Controls;
 
 use Instante\Bootstrap3Renderer\BootstrapRenderer;
 use Instante\Bootstrap3Renderer\RenderModeEnum;
+use Instante\Bootstrap3Renderer\Utils\PlaceholderHtml;
 use Instante\ExtendedFormMacros\IControlRenderer;
 use Instante\Helpers\SecureCallHelper;
 use Nette\Forms\IControl;
@@ -27,16 +28,42 @@ class DefaultControlRenderer implements IControlRenderer
         $pair = clone $r->getPrototypes()->pair;
         $pair->getPlaceholder('label')->addHtml($this->renderLabel($control));
         $ctrlHtml = $this->renderControl($control, TRUE);
-        if ($r->getRenderMode() === RenderModeEnum::HORIZONTAL) {
-            // wrap in bootstrap columns
-            $ctrlHtml = Html::el('div')
-                ->appendAttribute('class', $r->getColumnsClass($r->getInputColumns()))
-                ->addHtml($ctrlHtml);
-        }
-        $pair->getPlaceholder('control')->addHtml($ctrlHtml);
+        /** @var Html $ctrlHtml */
+        $wrapper = $this->wrapControlInColumnsGrid($pair, $ctrlHtml);
+
+        $pair->getPlaceholder('control')->addHtml($wrapper);
         $pair->getPlaceholder('errors')->addHtml($r->renderControlErrors($control));
         $pair->getPlaceholder('description')->addHtml($r->renderControlDescription($control));
         return $pair;
+    }
+
+    /**
+     * Wraps control in col-SS-IC when rendering in horizontal mode.
+     *
+     * WARNING of side effect - replaces 'errors' and 'description' placeholders if they were kept at $pair by default.
+     *
+     * @param PlaceholderHtml $pair
+     * @param Html $control
+     * @return Html
+     */
+    protected function wrapControlInColumnsGrid(PlaceholderHtml $pair, Html $control)
+    {
+        $r = $this->bootstrapRenderer;
+        if ($r->getRenderMode() === RenderModeEnum::HORIZONTAL) {
+            // wrap in bootstrap columns
+            $columns = Html::el('div')
+                ->appendAttribute('class', $r->getColumnsClass($r->getInputColumns()))
+                ->addHtml($control);
+            if ($pair->getPlaceholder('errors') === $pair) {
+                $pair->setPlaceholder($columns, 'errors');
+            }
+            if ($pair->getPlaceholder('description') === $pair) {
+                $pair->setPlaceholder($columns, 'description');
+            }
+            return $columns;
+        } else {
+            return $control;
+        }
     }
 
     /** @inheritdoc */
