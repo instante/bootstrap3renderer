@@ -7,7 +7,7 @@ use Instante\Helpers\SecureCallHelper;
 use Nette\Forms\IControl;
 use Nette\Utils\Html;
 
-abstract class AbstractChoiceListRenderer extends DefaultControlRenderer
+abstract class ChoiceListRenderer extends DefaultControlRenderer
 {
     /** @var Html item separator */
     public $separator = NULL;
@@ -88,7 +88,7 @@ abstract class AbstractChoiceListRenderer extends DefaultControlRenderer
      * @param string $key
      * @return Html
      */
-    protected function renderSingleLabel(IControl $control, $key)
+    public function renderSingleLabel(IControl $control, $key)
     {
         /** @noinspection PhpUndefinedMethodInspection */
         return $control->getLabelPart($key);
@@ -99,7 +99,7 @@ abstract class AbstractChoiceListRenderer extends DefaultControlRenderer
      * @param string $key
      * @return Html
      */
-    protected function renderSingleControl(IControl $control, $key)
+    public function renderSingleControl(IControl $control, $key)
     {
         /** @noinspection PhpUndefinedMethodInspection */
         return $control->getControlPart($key);
