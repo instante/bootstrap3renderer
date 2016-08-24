@@ -15,7 +15,7 @@ require_once __DIR__ . '/FakeRenderer.inc';
 $renderer = new FakeListRenderer($bsr = new BootstrapRenderer);
 /** @var IControl|MockInterface $ctrl */
 $ctrl = mock(IControl::class);
-$ctrl->shouldReceive('getControlPart')->with('ctl')->andReturn(Html::el()->addText('The Control'));
+$ctrl->shouldReceive('getControlPart')->with('ctl')->once()->andReturn(Html::el()->addText('The Control'));
 
 $el = $renderer->renderSingleControl($ctrl, 'ctl');
 Assert::type(Html::class, $el);
