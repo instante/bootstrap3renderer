@@ -2,6 +2,8 @@
 
 namespace Instante\Bootstrap3Renderer;
 
+use Instante\Bootstrap3Renderer\Controls\CheckboxRenderer;
+use Instante\Bootstrap3Renderer\Controls\ChoiceListRenderer;
 use Instante\Bootstrap3Renderer\Controls\DefaultControlRenderer;
 use Instante\Bootstrap3Renderer\Utils\PlaceholderHtml;
 use Instante\ExtendedFormMacros\IControlRenderer;
@@ -12,7 +14,10 @@ use /** @noinspection PhpInternalEntityUsedInspection */
     Nette\Bridges\FormsLatte\Runtime;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
+use Nette\Forms\Controls\Checkbox;
+use Nette\Forms\Controls\CheckboxList;
 use Nette\Forms\Controls\HiddenField;
+use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
@@ -30,7 +35,6 @@ use Traversable;
  * $form->setRenderer(new Instante\Bootstrap3Renderer\BootstrapRenderer);
  * </code>
  *
- * TODO individual render classes for special controls (checkbox, checkboxlist, radiolist etc)
  * TODO override latte form macros to be passed to renderer router
  * TODO form error (and other) states
  * TODO integration tests for complex render
@@ -91,7 +95,17 @@ class BootstrapRenderer implements IExtendedFormRenderer
     {
         $this->renderMode = $renderMode;
         $this->prototypes = $prototypes ?: PrototypeContainer::createDefault();
+        $checkboxListRenderer = new ChoiceListRenderer($bsr = new BootstrapRenderer, 'checkbox');
+        $radioListRenderer = new ChoiceListRenderer($bsr = new BootstrapRenderer, 'checkbox');
+        $checkboxRenderer = new CheckboxRenderer($bsr = new BootstrapRenderer);
         $this->controlRenderers = [
+            CheckboxList::class => $checkboxListRenderer,
+            'Nextras\Forms\Controls\MultiOptionList' => $checkboxListRenderer,
+            'Kdyby\Forms\Controls\CheckboxList' => $checkboxListRenderer,
+
+            RadioList::class => $radioListRenderer,
+            Checkbox::class => $checkboxRenderer,
+
             '*' => new DefaultControlRenderer($this),
         ];
     }

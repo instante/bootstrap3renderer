@@ -3,20 +3,26 @@
 namespace InstanteTests\Bootstrap3Renderer;
 
 use Instante\Bootstrap3Renderer\BootstrapRenderer;
-use InstanteTests\Bootstrap3Renderer\Controls\FakeListRenderer;
+use Instante\Bootstrap3Renderer\Controls\ChoiceListRenderer;
 use Mockery\MockInterface;
+use Nette\Forms\Controls\CheckboxList;
 use Nette\Forms\IControl;
 use Nette\Utils\Html;
 use Tester\Assert;
 
+interface IGetItems
+{
+    public function getItems();
+}
+
 require_once __DIR__ . '/../../bootstrap.php';
-require_once __DIR__ . '/FakeRenderer.inc';
 
 $items = ['a' => 'Item1', 'b' => 'Item2', 'c' => 'Item3'];
 
-$renderer = new FakeListRenderer($bsr = new BootstrapRenderer);
+$renderer = new ChoiceListRenderer($bsr = new BootstrapRenderer, 'fake');
 /** @var IControl|MockInterface $ctrl */
-$ctrl = mock(IControl::class);
+$ctrl = mock(IControl::class, IGetItems::class);
+
 $ctrl->shouldReceive('getItems')->atLeast()->once()->andReturn(array_keys($items));
 $ctrl->shouldReceive('getLabelPart')->atLeast()->once()->andReturnUsing(function ($x) {
     return Html::el()->addText($x);

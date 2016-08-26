@@ -2,18 +2,38 @@
 
 namespace Instante\Bootstrap3Renderer\Controls;
 
+use Instante\Bootstrap3Renderer\BootstrapRenderer;
 use Instante\Bootstrap3Renderer\RenderModeEnum;
 use Instante\Helpers\SecureCallHelper;
 use Nette\Forms\IControl;
+use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
-abstract class ChoiceListRenderer extends DefaultControlRenderer
+class ChoiceListRenderer extends DefaultControlRenderer
 {
     /** @var Html item separator */
     public $separator = NULL;
 
-    /** @var string to be overriden in descendant classes - assigns class="?[-inline]" to element wrapper */
+    /** @var string assigns class="?[-inline]" to single control element wrapper */
     protected $wrapperClass;
+
+    /** @var string method name */
+    protected $getItemsMethod;
+
+
+    /**
+     * ChoiceListRenderer constructor.
+     * @param BootstrapRenderer $bootstrapRenderer
+     * @param string $wrapperClass
+     * @param string $getItemsMethod
+     */
+    public function __construct(BootstrapRenderer $bootstrapRenderer, $wrapperClass, $getItemsMethod = 'getItems')
+    {
+        parent::__construct($bootstrapRenderer);
+        $this->wrapperClass = $wrapperClass;
+        $this->getItemsMethod = $getItemsMethod;
+    }
+
 
     /** {@inheritdoc} */
     public function renderSingleChoice(IControl $control, $key)
@@ -61,7 +81,15 @@ abstract class ChoiceListRenderer extends DefaultControlRenderer
         return $el;
     }
 
-    protected abstract function getListItems(IControl $control);
+    protected function getListItems(IControl $control)
+    {
+        if (!method_exists($control, $this->getItemsMethod)) {
+            throw new InvalidStateException(sprintf(
+                'Control rendered by %s must implement %s method', __CLASS__, $this->getItemsMethod
+            ));
+        }
+        return $control->{$this->getItemsMethod}();
+    }
 
     /**
      * @param IControl $control
