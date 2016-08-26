@@ -35,7 +35,7 @@ use Traversable;
  * $form->setRenderer(new Instante\Bootstrap3Renderer\BootstrapRenderer);
  * </code>
  *
- * TODO override latte form macros to be passed to renderer router
+ * TODO override latte form macros to be passed to renderer router, including n:name
  * TODO form error (and other) states
  * TODO integration tests for complex render
  * TODO support for label-attr and input-attr attributes to pair macro
