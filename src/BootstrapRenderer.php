@@ -182,6 +182,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
         $s = '';
         if (!$mode || $mode === 'begin') {
             //TODO: will have to redirect {form} macro to this routine to set form class
+            //currently this is not used because default form renderer calls FormsLatte\\Runtime directly
             $s .= $this->renderBegin($form);
         }
         if (!$mode || strtolower($mode) === 'ownerrors') {
@@ -445,7 +446,12 @@ class BootstrapRenderer implements IExtendedFormRenderer
         $this->assertInForm();
         $this->renderedControls->attach($control);
 
-        return $this->getControlRenderer($control)->renderControl($control, $renderedDescription);
+        $controlRenderer = $this->getControlRenderer($control);
+        if ($this->isButton($control) && $controlRenderer === $this->controlRenderers['*']) {
+            return $this->renderButton($control);
+        } else {
+            return $controlRenderer->renderControl($control, $renderedDescription);
+        }
     }
 
     /**
