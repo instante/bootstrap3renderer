@@ -15,35 +15,6 @@ abstract class ChoiceListRenderer extends DefaultControlRenderer
     /** @var string to be overriden in descendant classes - assigns class="?[-inline]" to element wrapper */
     protected $wrapperClass;
 
-    /**
-     * div.form-group
-     * [div.col-{ScreenSize}-offset-{LabelColumns}.col-{ScreenSize}-{InputColumns}]
-     *     div.(checkbox|radio){0..n}
-     *         label
-     *             input[type="checkbox|radio"]
-     *             ...Label
-     *     ||
-     *     label.(checkbox|radio)-inline{0..n}
-     *
-     * @param IControl $control
-     * @return Html
-     */
-    public function renderPair(IControl $control)
-    {
-        $r = $this->bootstrapRenderer;
-        $pair = clone $r->getPrototypes()->pair;
-
-        $controlHtml = $this->renderControl($control);
-        $wrapper = $this->wrapControlInColumnsGrid($pair, $controlHtml);
-
-        $pair->getPlaceholder('label')->addHtml($this->renderLabel($control));
-        $pair->getPlaceholder('control')->addHtml($wrapper);
-
-        $pair->getPlaceholder('errors')->addHtml($r->renderControlErrors($control));
-        $pair->getPlaceholder('description')->addHtml($r->renderControlDescription($control));
-        return $pair;
-    }
-
     /** {@inheritdoc} */
     public function renderSingleChoice(IControl $control, $key)
     {
@@ -63,6 +34,15 @@ abstract class ChoiceListRenderer extends DefaultControlRenderer
     }
 
     /**
+     * div.(checkbox|radio){0..n}
+     *     label
+     *         input[type="checkbox|radio"]
+     *         ...Label
+     * ||
+     * label.(checkbox|radio)-inline{0..n}
+     *     input[type="checkbox|radio"]
+     *     ...Label
+     *
      * @param IControl $control
      * @param bool $renderedDescription
      * @return Html
