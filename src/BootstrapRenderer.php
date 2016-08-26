@@ -95,9 +95,9 @@ class BootstrapRenderer implements IExtendedFormRenderer
     {
         $this->renderMode = $renderMode;
         $this->prototypes = $prototypes ?: PrototypeContainer::createDefault();
-        $checkboxListRenderer = new ChoiceListRenderer($bsr = new BootstrapRenderer, 'checkbox');
-        $radioListRenderer = new ChoiceListRenderer($bsr = new BootstrapRenderer, 'checkbox');
-        $checkboxRenderer = new CheckboxRenderer($bsr = new BootstrapRenderer);
+        $checkboxListRenderer = new ChoiceListRenderer($this, 'checkbox');
+        $radioListRenderer = new ChoiceListRenderer($this, 'radio');
+        $checkboxRenderer = new CheckboxRenderer($this);
         $this->controlRenderers = [
             CheckboxList::class => $checkboxListRenderer,
             'Nextras\Forms\Controls\MultiOptionList' => $checkboxListRenderer,
