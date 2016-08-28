@@ -429,19 +429,23 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
     /**
      * @param IControl $control
+     * @param array $attrs
+     * @param string $part
      * @return PlaceholderHtml|mixed
      */
-    public function renderLabel(IControl $control)
+    public function renderLabel(IControl $control, array $attrs = [], $part = NULL)
     {
         return $this->getControlRenderer($control)->renderLabel($control);
     }
 
     /**
      * @param IControl $control
+     * @param array $attrs
+     * @param string $part
      * @param bool $renderedDescription
      * @return Html
      */
-    public function renderControl(IControl $control, $renderedDescription = FALSE)
+    public function renderControl(IControl $control, array $attrs = [], $part = NULL, $renderedDescription = FALSE)
     {
         $this->assertInForm();
         $this->renderedControls->attach($control);
