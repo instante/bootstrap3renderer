@@ -35,7 +35,6 @@ use Traversable;
  * $form->setRenderer(new Instante\Bootstrap3Renderer\BootstrapRenderer);
  * </code>
  *
- * TODO form error (and other) states
  * TODO integration tests for complex render
  * TODO support for label-attr and input-attr attributes to pair macro
  *
@@ -134,7 +133,11 @@ class BootstrapRenderer implements IExtendedFormRenderer
         $this->assertInForm();
         $this->renderedControls->attach($control);
 
-        return $this->getControlRenderer($control)->renderPair($control);
+        $pair = $this->getControlRenderer($control)->renderPair($control);
+        if (count($control->getErrors()) > 0) {
+            $pair->appendAttribute('class', 'has-error');
+        }
+        return $pair;
     }
 
     public function renderGroup(ControlGroup $group)
