@@ -35,7 +35,6 @@ use Traversable;
  * $form->setRenderer(new Instante\Bootstrap3Renderer\BootstrapRenderer);
  * </code>
  *
- * TODO override latte form macros to be passed to renderer router, including n:name
  * TODO form error (and other) states
  * TODO integration tests for complex render
  * TODO support for label-attr and input-attr attributes to pair macro
@@ -177,26 +176,13 @@ class BootstrapRenderer implements IExtendedFormRenderer
         return $this->renderPairs($container->getControls());
     }
 
-    public function render(Form $form, $mode = NULL)
+    /** {@inheritdoc} */
+    public function render(Form $form)
     {
-        $s = '';
-        if (!$mode || $mode === 'begin') {
-            //TODO: will have to redirect {form} macro to this routine to set form class
-            //currently this is not used because default form renderer calls FormsLatte\\Runtime directly
-            $s .= $this->renderBegin($form);
-        }
-        if (!$mode || strtolower($mode) === 'ownerrors') {
-            $s .= $this->renderGlobalErrors();
-
-        } elseif ($mode === 'errors') {
-            $s .= $this->renderGlobalErrors(FALSE);
-        }
-        if (!$mode || $mode === 'body') {
-            $s .= $this->renderBody();
-        }
-        if (!$mode || $mode === 'end') {
-            $s .= $this->renderEnd();
-        }
+        $s = $this->renderBegin($form);
+        $s .= $this->renderGlobalErrors();
+        $s .= $this->renderBody();
+        $s .= $this->renderEnd();
         return $s;
     }
 
@@ -234,7 +220,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
         return $this->renderMode;
     }
 
-    public function renderBegin(Form $form, array $attrs = [])
+    public function renderBegin(Form $form, array $attrs = [], $withTags = TRUE)
     {
         if ($this->form !== $form) {
             $this->form = $form;
@@ -243,7 +229,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
         $this->renderedControls = new SplObjectStorage;
         $this->addFormModeClass($form, $attrs);
         /** @noinspection PhpInternalEntityUsedInspection */
-        $rendered = Runtime::renderFormBegin($form, $attrs);
+        $rendered = Runtime::renderFormBegin($form, $attrs, $withTags);
         return $rendered;
     }
 
@@ -286,13 +272,13 @@ class BootstrapRenderer implements IExtendedFormRenderer
             : $groups . "\n" . $groupless;
     }
 
-    public function renderEnd()
+    public function renderEnd($withTags = TRUE)
     {
         $this->assertInForm();
         $form = $this->form;
         $this->form = NULL;
         /** @noinspection PhpInternalEntityUsedInspection */
-        return Runtime::renderFormEnd($form);
+        return Runtime::renderFormEnd($form, $withTags);
     }
 
     private function addFormModeClass(Form $form, array &$attrs)
