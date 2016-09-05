@@ -138,6 +138,9 @@ class BootstrapRenderer implements IExtendedFormRenderer
         if (count($control->getErrors()) > 0) {
             $pair->appendAttribute('class', 'has-error');
         }
+        if (SecureCallHelper::tryCall($control, 'isRequired')) {
+            $pair->appendAttribute('class', 'required');
+        }
         return $pair;
     }
 
