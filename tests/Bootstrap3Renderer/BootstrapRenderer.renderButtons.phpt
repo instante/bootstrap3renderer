@@ -42,15 +42,15 @@ Assert::same('', (string)$empty);
 $renderer->setRenderMode(RenderModeEnum::HORIZONTAL)
     ->setColumnMinScreenSize(ScreenSizeEnum::LG)
     ->setLabelColumns(4);
-$verticalRender = $renderer->renderButtons([new FakeButton('[Foo]'), new FakeButton('[Bar]')]);
+$verticalRender = $renderer->renderButtons([new FakeButton('{Foo}'), new FakeButton('{Bar}')]);
 Assert::type(Html::class, $verticalRender);
 $verticalRenderStr = (string)$verticalRender;
-Assert::contains('[Foo][Bar]', $verticalRenderStr);
+Assert::match('~{Foo}\s+{Bar}~', $verticalRenderStr);
 Assert::contains('col-lg-8', $verticalRenderStr);
 Assert::contains('col-lg-offset-4', $verticalRenderStr);
 
 //other render
 $renderer->setRenderMode(RenderModeEnum::VERTICAL);
-$normalRender = $renderer->renderButtons([new FakeButton('[Foo]'), new FakeButton('[Bar]')]);
+$normalRender = $renderer->renderButtons([new FakeButton('{Foo}'), new FakeButton('{Bar}')]);
 Assert::type(Html::class, $normalRender);
-Assert::same('[Foo][Bar]', (string)$normalRender);
+Assert::match('~^{Foo}\s+{Bar}$~', (string)$normalRender);

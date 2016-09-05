@@ -411,8 +411,15 @@ class BootstrapRenderer implements IExtendedFormRenderer
         } else {
             $container = PlaceholderHtml::el();
         }
+        $first = TRUE;
         foreach ($buttons as $button) {
+            if ($first) {
+                $first = FALSE;
+            } else {
+                $container->addText("\n"); // inline button separator space
+            }
             $container->addHtml($this->renderButton($button));
+
         }
         return $container;
     }
