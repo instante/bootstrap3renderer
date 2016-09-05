@@ -7,6 +7,7 @@ use Instante\Bootstrap3Renderer\RenderModeEnum;
 use Instante\Bootstrap3Renderer\Utils\PlaceholderHtml;
 use Instante\ExtendedFormMacros\PairAttributes;
 use Instante\Helpers\SecureCallHelper;
+use InvalidArgumentException;
 use Nette\Forms\IControl;
 use Nette\Utils\Html;
 
@@ -71,11 +72,14 @@ class DefaultControlRenderer implements IControlRenderer
     /** @inheritdoc */
     public function renderControl(IControl $control, array $attrs = [], $part = NULL, $renderedDescription = FALSE)
     {
-        if (!method_exists($control, $part === NULL ? 'getControl' : 'getControlPart')) {
+        if ($part !== NULL) {
+            throw new InvalidArgumentException(__CLASS__ . ' does not support rendering control parts');
+        }
+        if (!method_exists($control, 'getControl')) {
             return Html::el();
         }
         /** @noinspection PhpUndefinedMethodInspection */
-        $el = $part === NULL ? $control->getControl() : $control->getControlPart($part);
+        $el = $control->getControl();
         /** @var Html $el */
         $r = $this->bootstrapRenderer;
         if ($el instanceof Html) {
@@ -92,6 +96,9 @@ class DefaultControlRenderer implements IControlRenderer
     /** @inheritdoc */
     public function renderLabel(IControl $control, array $attrs = [], $part = NULL)
     {
+        if ($part !== NULL) {
+            throw new InvalidArgumentException(__CLASS__ . ' does not support rendering control parts');
+        }
         $r = $this->bootstrapRenderer;
         $el = $this->getControlLabel($control, $part);
         if ($el === NULL) {
@@ -110,12 +117,8 @@ class DefaultControlRenderer implements IControlRenderer
         return $el;
     }
 
-    protected function getControlLabel(IControl $control, $part = NULL)
+    protected function getControlLabel(IControl $control)
     {
-        if ($part === NULL) {
-            return SecureCallHelper::tryCall($control, 'getLabel');
-        } else {
-            return SecureCallHelper::tryCall($control, 'getLabelPart', $part);
-        }
+        return SecureCallHelper::tryCall($control, 'getLabel');
     }
 }

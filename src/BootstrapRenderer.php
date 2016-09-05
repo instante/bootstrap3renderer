@@ -458,7 +458,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
         $controlRenderer = $this->getControlRenderer($control);
         if ($this->isButton($control) && $controlRenderer === $this->controlRenderers['*']) {
-            return $this->renderButton($control, $attrs, $part);
+            return $this->renderButton($control, $attrs);
         } else {
             return $controlRenderer->renderControl($control, $attrs, $part, $renderedDescription);
         }

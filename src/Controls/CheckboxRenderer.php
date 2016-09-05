@@ -62,7 +62,7 @@ class CheckboxRenderer extends DefaultControlRenderer
     public function renderControl(IControl $control, array $attrs = [], $part = NULL, $renderedDescription = FALSE)
     {
         if ($part !== NULL) {
-            throw new InvalidArgumentException('Checkbox renderer does not support rendering control parts');
+            throw new InvalidArgumentException(__CLASS__ . ' does not support rendering control parts');
         }
         if (!method_exists($control, 'getControlPart')) {
             return Html::el();

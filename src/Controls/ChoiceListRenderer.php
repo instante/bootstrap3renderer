@@ -28,8 +28,6 @@ class ChoiceListRenderer extends DefaultControlRenderer
         $this->wrapperClass = $wrapperClass;
     }
 
-
-    /** {@inheritdoc} */
     public function renderSingleChoice(IControl $control, $key)
     {
         $label = $this->renderSingleLabel($control, $key);
@@ -65,6 +63,15 @@ class ChoiceListRenderer extends DefaultControlRenderer
      */
     public function renderControl(IControl $control, array $attrs = [], $part = NULL, $renderedDescription = FALSE)
     {
+        if ($part !== NULL) {
+            if (isset($attrs['with_label'])) {
+                unset($attrs['with_label']);
+                $el = $this->renderSingleChoice($control, $part);
+            } else {
+                $el = $this->renderSingleChoice($control, $part);
+            }
+            return $el->addAttributes($attrs);
+        }
         $el = Html::el();
         $first = TRUE;
         foreach ($this->getListItems($control) as $item) {
@@ -76,6 +83,15 @@ class ChoiceListRenderer extends DefaultControlRenderer
         }
         return $el;
     }
+
+    public function renderLabel(IControl $control, array $attrs = [], $part = NULL)
+    {
+        if ($part !== NULL) {
+            return $this->renderSingleLabel($control, $part)->addAttributes($attrs);
+        }
+        return parent::renderLabel($control, $attrs, $part);
+    }
+
 
     protected function getListItems(IControl $control)
     {
