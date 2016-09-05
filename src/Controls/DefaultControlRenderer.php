@@ -90,7 +90,7 @@ class DefaultControlRenderer implements IControlRenderer
     public function renderLabel(IControl $control)
     {
         $r = $this->bootstrapRenderer;
-        $el = SecureCallHelper::tryCall($control, 'getLabel');
+        $el = $this->getControlLabel($control);
         if ($el === NULL) {
             $el = clone $r->prototypes->emptyLabel;
             if (method_exists($control, 'getHtmlId')) {
@@ -101,5 +101,10 @@ class DefaultControlRenderer implements IControlRenderer
             $el->appendAttribute('class', $r->getColumnsClass($r->getLabelColumns()));
         }
         return $el;
+    }
+
+    protected function getControlLabel(IControl $control)
+    {
+        return SecureCallHelper::tryCall($control, 'getLabel');
     }
 }

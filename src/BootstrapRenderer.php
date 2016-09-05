@@ -37,6 +37,7 @@ use Traversable;
  *
  * TODO integration tests for complex render
  * TODO support for label-attr and input-attr attributes to pair macro
+ * TODO somehow set as default renderer using the extension
  *
  * BACKLOG add support for simple rendering of styled checkbox and radio elements
  *

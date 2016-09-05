@@ -3,6 +3,8 @@
 namespace Instante\Bootstrap3Renderer\Controls;
 
 use Instante\Bootstrap3Renderer\RenderModeEnum;
+use Instante\Helpers\SecureCallHelper;
+use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\IControl;
 use Nette\Utils\Html;
 
@@ -66,5 +68,10 @@ class CheckboxRenderer extends DefaultControlRenderer
             $el = Html::el()->addHtml($el);
         }
         return $el;
+    }
+
+    protected function getControlLabel(IControl $control)
+    {
+        return SecureCallHelper::tryCall($control, 'getLabelPart');
     }
 }
