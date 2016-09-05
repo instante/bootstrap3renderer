@@ -76,7 +76,6 @@ class DefaultControlRenderer implements IControlRenderer
         /** @var Html $el */
         $el = $control->getControl();
         if ($el instanceof Html) {
-            $el->appendAttribute('class', $r::FORM_CONTROL_CLASS);
             if ($renderedDescription && $r->getControlDescription($control) !== NULL) {
                 $el->setAttribute('aria-describedby', $r->getDescriptionId($control));
             }

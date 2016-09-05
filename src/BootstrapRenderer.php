@@ -5,6 +5,7 @@ namespace Instante\Bootstrap3Renderer;
 use Instante\Bootstrap3Renderer\Controls\CheckboxRenderer;
 use Instante\Bootstrap3Renderer\Controls\ChoiceListRenderer;
 use Instante\Bootstrap3Renderer\Controls\DefaultControlRenderer;
+use Instante\Bootstrap3Renderer\Controls\TextBaseRenderer;
 use Instante\Bootstrap3Renderer\Utils\PlaceholderHtml;
 use Instante\ExtendedFormMacros\IControlRenderer;
 use Instante\ExtendedFormMacros\IExtendedFormRenderer;
@@ -18,7 +19,9 @@ use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\CheckboxList;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Controls\RadioList;
+use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Controls\TextBase;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
@@ -47,7 +50,6 @@ class BootstrapRenderer implements IExtendedFormRenderer
 {
     use SmartObject;
 
-    const FORM_CONTROL_CLASS = 'form-control';
     const COLUMNS_CLASS_PATTERN = 'col-%(size)-%(cols;d)';
     const COLUMNS_OFFSET_PATTERN = 'col-%(size)-offset-%(cols;d)';
 
@@ -97,6 +99,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
         $checkboxListRenderer = new ChoiceListRenderer($this, 'checkbox');
         $radioListRenderer = new ChoiceListRenderer($this, 'radio');
         $checkboxRenderer = new CheckboxRenderer($this);
+        $textBaseRenderer = new TextBaseRenderer($this);
         $this->controlRenderers = [
             CheckboxList::class => $checkboxListRenderer,
             'Nextras\Forms\Controls\MultiOptionList' => $checkboxListRenderer,
@@ -104,6 +107,9 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
             RadioList::class => $radioListRenderer,
             Checkbox::class => $checkboxRenderer,
+
+            TextBase::class => $textBaseRenderer,
+            SelectBox::class => $textBaseRenderer,
 
             '*' => new DefaultControlRenderer($this),
         ];

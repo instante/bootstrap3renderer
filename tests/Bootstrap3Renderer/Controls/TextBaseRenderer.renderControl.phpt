@@ -3,26 +3,23 @@
 namespace InstanteTests\Bootstrap3Renderer;
 
 use Instante\Bootstrap3Renderer\BootstrapRenderer;
-use Instante\Bootstrap3Renderer\Controls\DefaultControlRenderer;
-use Nette\Forms\Controls\BaseControl;
+use Instante\Bootstrap3Renderer\Controls\TextBaseRenderer;
+use Nette\Forms\Controls\TextBase;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 use Tester\Assert;
 
 require_once __DIR__ . '/../../bootstrap.php';
 
-$renderer = new DefaultControlRenderer(new BootstrapRenderer);
+$renderer = new TextBaseRenderer(new BootstrapRenderer);
 $form = new Form;
 
-$control = spy(BaseControl::class);
+$control = spy(TextBase::class);
 $control->shouldReceive('getControl')->andReturn(Html::el('input')->setAttribute('value', 'theCtrl'));
-$control->shouldReceive('getHtmlId')->andReturn('myid');
-$control->shouldReceive('getOption')->with('description')->andReturn('myid');
 $control->shouldReceive('getRules->check');
 $control->shouldReceive('getForm')->andReturn($form);
 $control->shouldReceive('getErrors')->andReturn([]);
 $form->addComponent($control, 'a');
 
-Assert::type(Html::class, $renderer->renderControl($control));
-Assert::contains('aria-describedby="describe-myid"', (string)$renderer->renderControl($control, TRUE));
+Assert::contains('class="form-control"', (string)$renderer->renderControl($control));
 
