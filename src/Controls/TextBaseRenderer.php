@@ -10,10 +10,10 @@ class TextBaseRenderer extends DefaultControlRenderer
     const FORM_CONTROL_CLASS = 'form-control';
 
     /** @inheritdoc */
-    public function renderControl(IControl $control, $renderedDescription = FALSE)
+    public function renderControl(IControl $control, array $attrs = [], $part = NULL, $renderedDescription = FALSE)
     {
         /** @var Html $el */
-        $el = parent::renderControl($control, $renderedDescription);
+        $el = parent::renderControl($control, $attrs, $part, $renderedDescription);
         if ($el->getName() !== '') {
             $el->appendAttribute('class', static::FORM_CONTROL_CLASS);
         }

@@ -5,7 +5,8 @@ namespace Instante\Bootstrap3Renderer\Controls;
 use Instante\Bootstrap3Renderer\BootstrapRenderer;
 use Instante\Bootstrap3Renderer\RenderModeEnum;
 use Instante\Bootstrap3Renderer\Utils\PlaceholderHtml;
-use Instante\ExtendedFormMacros\IControlRenderer;
+use Instante\Bootstrap3Renderer\Controls\IControlRenderer;
+use Instante\ExtendedFormMacros\PairAttributes;
 use Instante\Helpers\SecureCallHelper;
 use Nette\Forms\IControl;
 use Nette\Utils\Html;
@@ -21,7 +22,7 @@ class DefaultControlRenderer implements IControlRenderer
     }
 
     /** @inheritdoc */
-    public function renderPair(IControl $control)
+    public function renderPair(IControl $control, PairAttributes $attrs)
     {
         $r = $this->bootstrapRenderer;
 
@@ -67,8 +68,9 @@ class DefaultControlRenderer implements IControlRenderer
     }
 
     /** @inheritdoc */
-    public function renderControl(IControl $control, $renderedDescription = FALSE)
+    public function renderControl(IControl $control, array $attrs = [], $part = NULL, $renderedDescription = FALSE)
     {
+        //TODO attrs and part
         if (!method_exists($control, 'getControl')) {
             return Html::el();
         }
@@ -86,8 +88,9 @@ class DefaultControlRenderer implements IControlRenderer
     }
 
     /** @inheritdoc */
-    public function renderLabel(IControl $control)
+    public function renderLabel(IControl $control, array $attrs = [], $part = NULL)
     {
+        //TODO attrs and part
         $r = $this->bootstrapRenderer;
         $el = $this->getControlLabel($control);
         if ($el === NULL) {

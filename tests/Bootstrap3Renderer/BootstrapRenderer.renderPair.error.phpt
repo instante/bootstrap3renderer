@@ -3,7 +3,7 @@
 namespace InstanteTests\Bootstrap3Renderer;
 
 use Instante\Bootstrap3Renderer\BootstrapRenderer;
-use Instante\ExtendedFormMacros\IControlRenderer;
+use Instante\Bootstrap3Renderer\Controls\IControlRenderer;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\Utils\Html;

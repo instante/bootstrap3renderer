@@ -7,8 +7,9 @@ use Instante\Bootstrap3Renderer\Controls\ChoiceListRenderer;
 use Instante\Bootstrap3Renderer\Controls\DefaultControlRenderer;
 use Instante\Bootstrap3Renderer\Controls\TextBaseRenderer;
 use Instante\Bootstrap3Renderer\Utils\PlaceholderHtml;
-use Instante\ExtendedFormMacros\IControlRenderer;
+use Instante\Bootstrap3Renderer\Controls\IControlRenderer;
 use Instante\ExtendedFormMacros\IExtendedFormRenderer;
+use Instante\ExtendedFormMacros\PairAttributes;
 use Instante\Helpers\SecureCallHelper;
 use Instante\Helpers\Strings;
 use /** @noinspection PhpInternalEntityUsedInspection */
@@ -38,8 +39,6 @@ use Traversable;
  * $form->setRenderer(new Instante\Bootstrap3Renderer\BootstrapRenderer);
  * </code>
  *
- * TODO integration tests for complex render
- * TODO support for label-attr and input-attr attributes to pair macro
  * TODO somehow set as default renderer using the extension
  *
  * BACKLOG add support for simple rendering of styled checkbox and radio elements
@@ -133,14 +132,15 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
     /**
      * @param IControl $control
+     * @param PairAttributes $attrs
      * @return Html
      */
-    public function renderPair(IControl $control)
+    public function renderPair(IControl $control, PairAttributes $attrs)
     {
         $this->assertInForm();
         $this->renderedControls->attach($control);
 
-        $pair = $this->getControlRenderer($control)->renderPair($control);
+        $pair = $this->getControlRenderer($control)->renderPair($control, $attrs);
         if (count($control->getErrors()) > 0) {
             $pair->appendAttribute('class', 'has-error');
         }
@@ -441,7 +441,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
      */
     public function renderLabel(IControl $control, array $attrs = [], $part = NULL)
     {
-        return $this->getControlRenderer($control)->renderLabel($control);
+        return $this->getControlRenderer($control)->renderLabel($control, $attrs, $part);
     }
 
     /**
@@ -458,9 +458,9 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
         $controlRenderer = $this->getControlRenderer($control);
         if ($this->isButton($control) && $controlRenderer === $this->controlRenderers['*']) {
-            return $this->renderButton($control);
+            return $this->renderButton($control, $attrs, $part);
         } else {
-            return $controlRenderer->renderControl($control, $renderedDescription);
+            return $controlRenderer->renderControl($control, $attrs, $part, $renderedDescription);
         }
     }
 
@@ -518,8 +518,9 @@ class BootstrapRenderer implements IExtendedFormRenderer
         return $el;
     }
 
-    public function renderButton(IControl $button)
+    public function renderButton(IControl $button, array $attrs = [], $part = NULL)
     {
+        //TODO move to button renderer
         $this->assertInForm();
 
         /** @var Html $el */
@@ -552,7 +553,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
     /**
      * @param IControl $control
-     * @return IControlRenderer
+     * @return \Instante\Bootstrap3Renderer\Controls\IControlRenderer
      */
     protected function getControlRenderer(IControl $control)
     {

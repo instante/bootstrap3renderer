@@ -3,6 +3,7 @@
 namespace Instante\Bootstrap3Renderer\Controls;
 
 use Instante\Bootstrap3Renderer\RenderModeEnum;
+use Instante\ExtendedFormMacros\PairAttributes;
 use Instante\Helpers\SecureCallHelper;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\IControl;
@@ -20,9 +21,10 @@ class CheckboxRenderer extends DefaultControlRenderer
      *             ...Label
      *
      * @param IControl $control
+     * @param PairAttributes $attrs
      * @return Html
      */
-    public function renderPair(IControl $control)
+    public function renderPair(IControl $control, PairAttributes $attrs)
     {
         $r = $this->bootstrapRenderer;
         $pair = clone $r->getPrototypes()->pair;
@@ -52,8 +54,9 @@ class CheckboxRenderer extends DefaultControlRenderer
     }
 
     /** @inheritdoc */
-    public function renderControl(IControl $control, $renderedDescription = FALSE)
+    public function renderControl(IControl $control, array $attrs = [], $part = NULL, $renderedDescription = FALSE)
     {
+        //TODO attrs and part
         if (!method_exists($control, 'getControlPart')) {
             return Html::el();
         }
