@@ -10,9 +10,10 @@ interface IControlRenderer
 {
     /**
      * @param IControl $control
+     * @param PairAttributes $attrs
      * @return Html
      */
-    public function renderPair(IControl $control, PairAttributes $attrs);
+    public function renderPair(IControl $control, PairAttributes $attrs = NULL);
 
     /**
      * @param IControl $control

@@ -3,6 +3,7 @@
 namespace InstanteTests\Bootstrap3Renderer;
 
 use Instante\Bootstrap3Renderer\BootstrapRenderer;
+use Instante\ExtendedFormMacros\PairAttributes;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Tester\Assert;
@@ -16,7 +17,7 @@ class PairsTestingBootstrapRenderer extends BootstrapRenderer
         return parent::renderPairs($controls);
     }
 
-    public function renderPair(IControl $control)
+    public function renderPair(IControl $control, PairAttributes $attrs = NULL)
     {
         return $control->getValue();
     }

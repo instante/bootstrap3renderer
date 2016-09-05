@@ -14,7 +14,7 @@ class TextBaseRenderer extends DefaultControlRenderer
     {
         /** @var Html $el */
         $el = parent::renderControl($control, $attrs, $part, $renderedDescription);
-        if ($el->getName() !== '') {
+        if ($el->getName() !== '' && !isset($attrs['no-form-control'])) {
             $el->appendAttribute('class', static::FORM_CONTROL_CLASS);
         }
         return $el;

@@ -135,7 +135,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
      * @param PairAttributes $attrs
      * @return Html
      */
-    public function renderPair(IControl $control, PairAttributes $attrs)
+    public function renderPair(IControl $control, PairAttributes $attrs = NULL)
     {
         $this->assertInForm();
         $this->renderedControls->attach($control);
@@ -518,9 +518,8 @@ class BootstrapRenderer implements IExtendedFormRenderer
         return $el;
     }
 
-    public function renderButton(IControl $button, array $attrs = [], $part = NULL)
+    public function renderButton(IControl $button, array $attrs = [])
     {
-        //TODO move to button renderer
         $this->assertInForm();
 
         /** @var Html $el */
@@ -529,6 +528,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
             throw new NotSupportedException('Rendering buttons not having getControl() method is not supported');
         }
         $el->appendAttribute('class', 'btn');
+        $el->addAttributes($attrs);
         if (!$this->hasButtonTypeClass($el)) {
             if ($button instanceof SubmitButton) {
                 $el->appendAttribute('class', 'btn-primary');

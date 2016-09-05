@@ -15,7 +15,9 @@ require_once __DIR__ . '/../bootstrap.php';
 $renderer = new BootstrapRenderer;
 $renderer->controlRenderers['*'] = $controlRenderer = mock(IControlRenderer::class);
 $control = mock(IControl::class);
-$controlRenderer->shouldReceive('renderPair')->with($control)->andReturnUsing(function () { return Html::el('div'); });
+$controlRenderer->shouldReceive('renderPair')->with($control, NULL)->andReturnUsing(function () {
+    return Html::el('div');
+});
 $control->shouldReceive('getErrors')->andReturnValues([['a'], []]);
 $renderer->renderBegin(new Form);
 

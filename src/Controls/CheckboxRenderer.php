@@ -5,8 +5,8 @@ namespace Instante\Bootstrap3Renderer\Controls;
 use Instante\Bootstrap3Renderer\RenderModeEnum;
 use Instante\ExtendedFormMacros\PairAttributes;
 use Instante\Helpers\SecureCallHelper;
-use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\IControl;
+use Nette\InvalidArgumentException;
 use Nette\Utils\Html;
 
 class CheckboxRenderer extends DefaultControlRenderer
@@ -24,12 +24,14 @@ class CheckboxRenderer extends DefaultControlRenderer
      * @param PairAttributes $attrs
      * @return Html
      */
-    public function renderPair(IControl $control, PairAttributes $attrs)
+    public function renderPair(IControl $control, PairAttributes $attrs = NULL)
     {
+        $attrs = $attrs ?: new PairAttributes;
+
         $r = $this->bootstrapRenderer;
         $pair = clone $r->getPrototypes()->pair;
 
-        $label = $this->renderCheckboxInLabel($control);
+        $label = $this->renderCheckboxInLabel($control, $attrs);
         $cb = Html::el('div', ['class' => 'checkbox']);
         $cb->addHtml($label);
         $wrapper = $this->wrapControlInColumnsGrid($pair, $cb);
@@ -41,14 +43,17 @@ class CheckboxRenderer extends DefaultControlRenderer
 
         $pair->getPlaceholder('errors')->addHtml($r->renderControlErrors($control));
         $pair->getPlaceholder('description')->addHtml($r->renderControlDescription($control));
+        $pair->addAttributes($attrs->container);
         return $pair;
     }
 
     /** @inheritdoc */
-    public function renderCheckboxInLabel(IControl $control)
+    public function renderCheckboxInLabel(IControl $control, PairAttributes $attrs = NULL)
     {
-        $label = $this->renderLabel($control);
-        $controlHtml = $this->renderControl($control);
+        $attrs = $attrs ?: new PairAttributes;
+
+        $label = $this->renderLabel($control, $attrs->label);
+        $controlHtml = $this->renderControl($control, $attrs->input);
         $label->insert(0, $controlHtml);
         return $label;
     }
@@ -56,7 +61,9 @@ class CheckboxRenderer extends DefaultControlRenderer
     /** @inheritdoc */
     public function renderControl(IControl $control, array $attrs = [], $part = NULL, $renderedDescription = FALSE)
     {
-        //TODO attrs and part
+        if ($part !== NULL) {
+            throw new InvalidArgumentException('Checkbox renderer does not support rendering control parts');
+        }
         if (!method_exists($control, 'getControlPart')) {
             return Html::el();
         }
@@ -67,13 +74,14 @@ class CheckboxRenderer extends DefaultControlRenderer
             if ($renderedDescription && $r->getControlDescription($control) !== NULL) {
                 $el->setAttribute('aria-describedby', $r->getDescriptionId($control));
             }
+            $el->addAttributes($attrs);
         } else {
             $el = Html::el()->addHtml($el);
         }
         return $el;
     }
 
-    protected function getControlLabel(IControl $control)
+    protected function getControlLabel(IControl $control, $part = NULL)
     {
         return SecureCallHelper::tryCall($control, 'getLabelPart');
     }

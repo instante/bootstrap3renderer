@@ -5,7 +5,6 @@ namespace Instante\Bootstrap3Renderer\Controls;
 use Instante\Bootstrap3Renderer\BootstrapRenderer;
 use Instante\Bootstrap3Renderer\RenderModeEnum;
 use Instante\Bootstrap3Renderer\Utils\PlaceholderHtml;
-use Instante\Bootstrap3Renderer\Controls\IControlRenderer;
 use Instante\ExtendedFormMacros\PairAttributes;
 use Instante\Helpers\SecureCallHelper;
 use Nette\Forms\IControl;
@@ -22,19 +21,21 @@ class DefaultControlRenderer implements IControlRenderer
     }
 
     /** @inheritdoc */
-    public function renderPair(IControl $control, PairAttributes $attrs)
+    public function renderPair(IControl $control, PairAttributes $attrs = NULL)
     {
         $r = $this->bootstrapRenderer;
+        $attrs = $attrs ?: new PairAttributes;
 
         $pair = clone $r->getPrototypes()->pair;
-        $pair->getPlaceholder('label')->addHtml($this->renderLabel($control));
-        $ctrlHtml = $this->renderControl($control, TRUE);
+        $pair->getPlaceholder('label')->addHtml($this->renderLabel($control, $attrs->label));
+        $ctrlHtml = $this->renderControl($control, $attrs->input, NULL, TRUE);
         /** @var Html $ctrlHtml */
         $wrapper = $this->wrapControlInColumnsGrid($pair, $ctrlHtml);
 
         $pair->getPlaceholder('control')->addHtml($wrapper);
         $pair->getPlaceholder('errors')->addHtml($r->renderControlErrors($control));
         $pair->getPlaceholder('description')->addHtml($r->renderControlDescription($control));
+        $pair->addAttributes($attrs->container);
         return $pair;
     }
 
@@ -70,17 +71,18 @@ class DefaultControlRenderer implements IControlRenderer
     /** @inheritdoc */
     public function renderControl(IControl $control, array $attrs = [], $part = NULL, $renderedDescription = FALSE)
     {
-        //TODO attrs and part
-        if (!method_exists($control, 'getControl')) {
+        if (!method_exists($control, $part === NULL ? 'getControl' : 'getControlPart')) {
             return Html::el();
         }
-        $r = $this->bootstrapRenderer;
+        /** @noinspection PhpUndefinedMethodInspection */
+        $el = $part === NULL ? $control->getControl() : $control->getControlPart($part);
         /** @var Html $el */
-        $el = $control->getControl();
+        $r = $this->bootstrapRenderer;
         if ($el instanceof Html) {
             if ($renderedDescription && $r->getControlDescription($control) !== NULL) {
                 $el->setAttribute('aria-describedby', $r->getDescriptionId($control));
             }
+            $el->addAttributes($attrs);
         } else {
             $el = Html::el()->addHtml($el);
         }
@@ -90,23 +92,30 @@ class DefaultControlRenderer implements IControlRenderer
     /** @inheritdoc */
     public function renderLabel(IControl $control, array $attrs = [], $part = NULL)
     {
-        //TODO attrs and part
         $r = $this->bootstrapRenderer;
-        $el = $this->getControlLabel($control);
+        $el = $this->getControlLabel($control, $part);
         if ($el === NULL) {
             $el = clone $r->prototypes->emptyLabel;
             if (method_exists($control, 'getHtmlId')) {
                 $el->getPlaceholder()->setAttribute('for', $control->getHtmlId());
             }
         }
-        if ($el instanceof Html && $r->getRenderMode() === RenderModeEnum::HORIZONTAL) {
-            $el->appendAttribute('class', $r->getColumnsClass($r->getLabelColumns()));
+        if ($el instanceof Html) {
+            $el->addAttributes($attrs);
+            if ($r->getRenderMode() === RenderModeEnum::HORIZONTAL) {
+                $el->appendAttribute('class', $r->getColumnsClass($r->getLabelColumns()));
+            }
         }
+
         return $el;
     }
 
-    protected function getControlLabel(IControl $control)
+    protected function getControlLabel(IControl $control, $part = NULL)
     {
-        return SecureCallHelper::tryCall($control, 'getLabel');
+        if ($part === NULL) {
+            return SecureCallHelper::tryCall($control, 'getLabel');
+        } else {
+            return SecureCallHelper::tryCall($control, 'getLabelPart', $part);
+        }
     }
 }

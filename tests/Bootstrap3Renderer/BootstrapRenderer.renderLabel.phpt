@@ -11,5 +11,5 @@ require_once __DIR__ . '/../bootstrap.php';
 $renderer = new BootstrapRenderer;
 $renderer->controlRenderers['*'] = $mcr = spy(IControlRenderer::class);
 $control = spy(BaseControl::class);
-$mcr->shouldReceive('renderLabel')->with($control)->once();
+$mcr->shouldReceive('renderLabel')->with($control, [], NULL)->once();
 $renderer->renderLabel($control);

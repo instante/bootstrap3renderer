@@ -58,12 +58,13 @@ class ChoiceListRenderer extends DefaultControlRenderer
      *     ...Label
      *
      * @param IControl $control
+     * @param array $attrs
+     * @param string $part
      * @param bool $renderedDescription
      * @return Html
      */
     public function renderControl(IControl $control, array $attrs = [], $part = NULL, $renderedDescription = FALSE)
     {
-        //TODO attrs and part
         $el = Html::el();
         $first = TRUE;
         foreach ($this->getListItems($control) as $item) {

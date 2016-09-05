@@ -6,6 +6,8 @@ use Instante\Bootstrap3Renderer\BootstrapRenderer;
 use Instante\Bootstrap3Renderer\Controls\CheckboxRenderer;
 use Instante\Bootstrap3Renderer\RenderModeEnum;
 use Instante\Bootstrap3Renderer\ScreenSizeEnum;
+use Instante\ExtendedFormMacros\PairAttributes;
+use Mockery;
 use Mockery\MockInterface;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
@@ -21,7 +23,7 @@ $renderer = mock(CheckboxRenderer::class . '[renderCheckboxInLabel]',
 /** @var CheckboxRenderer|MockInterface $renderer */
 /** @var BootstrapRenderer|MockInterface $bsr */
 
-$renderer->shouldReceive('renderCheckboxInLabel')->with($form['foo'])->andReturn(Html::el()->addText('[checkboxInLabel]'));
+$renderer->shouldReceive('renderCheckboxInLabel')->with($form['foo'], Mockery::type(PairAttributes::class))->andReturn(Html::el()->addText('[checkboxInLabel]'));
 $bsr->shouldReceive('renderControlErrors')->with($form['foo'])->andReturn('[errors]');
 
 $bsr->renderBegin($form);

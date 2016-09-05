@@ -24,5 +24,5 @@ $control->shouldReceive('getErrors')->andReturn([]);
 $form->addComponent($control, 'a');
 
 Assert::type(Html::class, $renderer->renderControl($control));
-Assert::contains('aria-describedby="describe-myid"', (string)$renderer->renderControl($control, TRUE));
+Assert::contains('aria-describedby="describe-myid"', (string)$renderer->renderControl($control, [], NULL, TRUE));
 
