@@ -17,21 +17,15 @@ class ChoiceListRenderer extends DefaultControlRenderer
     /** @var string assigns class="?[-inline]" to single control element wrapper */
     protected $wrapperClass;
 
-    /** @var string method name */
-    protected $getItemsMethod;
-
-
     /**
      * ChoiceListRenderer constructor.
      * @param BootstrapRenderer $bootstrapRenderer
      * @param string $wrapperClass
-     * @param string $getItemsMethod
      */
-    public function __construct(BootstrapRenderer $bootstrapRenderer, $wrapperClass, $getItemsMethod = 'getItems')
+    public function __construct(BootstrapRenderer $bootstrapRenderer, $wrapperClass)
     {
         parent::__construct($bootstrapRenderer);
         $this->wrapperClass = $wrapperClass;
-        $this->getItemsMethod = $getItemsMethod;
     }
 
 
@@ -83,12 +77,12 @@ class ChoiceListRenderer extends DefaultControlRenderer
 
     protected function getListItems(IControl $control)
     {
-        if (!method_exists($control, $this->getItemsMethod)) {
+        if (!method_exists($control, 'getItems')) {
             throw new InvalidStateException(sprintf(
-                'Control rendered by %s must implement %s method', __CLASS__, $this->getItemsMethod
+                'Control rendered by %s must implement getItems() method', __CLASS__
             ));
         }
-        return $control->{$this->getItemsMethod}();
+        return array_keys($control->getItems());
     }
 
     /**
