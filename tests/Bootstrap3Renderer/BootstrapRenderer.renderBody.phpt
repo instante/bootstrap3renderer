@@ -26,8 +26,8 @@ $form = new Form;
 $renderer = new BodyTestingBootstrapRenderer;
 $renderer->renderBegin($form); //to fetch form object
 
-Assert::match('~<GROUPS>\s*<PAIRS>~', $renderer->renderBody());
-$renderer->setGrouplessRenderedFirst();
 Assert::match('~<PAIRS>\s*<GROUPS>~', $renderer->renderBody());
-$renderer->setGrouplessRenderedFirst(FALSE);
+$renderer->setGroupsRenderedFirst();
 Assert::match('~<GROUPS>\s*<PAIRS>~', $renderer->renderBody());
+$renderer->setGroupsRenderedFirst(FALSE);
+Assert::match('~<PAIRS>\s*<GROUPS>~', $renderer->renderBody());

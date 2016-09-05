@@ -63,7 +63,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
     protected $columnMinScreenSize = ScreenSizeEnum::SM;
 
     /** @var bool if true, controls without group go first */
-    protected $grouplessRenderedFirst = FALSE;
+    protected $groupsRenderedFirst = FALSE;
 
     /**
      * set to false, if you want to display the field errors also as form errors
@@ -280,9 +280,9 @@ class BootstrapRenderer implements IExtendedFormRenderer
         $groups = $this->renderGroups();
         $groupless = $this->renderPairs($this->form->getControls());
 
-        return $this->areGrouplessRenderedFirst()
-            ? $groupless . "\n" . $groups
-            : $groups . "\n" . $groupless;
+        return $this->areGroupsRenderedFirst()
+            ? $groups . "\n" . $groupless
+            : $groupless . "\n" . $groups;
     }
 
     public function renderEnd($withTags = TRUE)
@@ -333,18 +333,18 @@ class BootstrapRenderer implements IExtendedFormRenderer
     }
 
     /** @return boolean */
-    public function areGrouplessRenderedFirst()
+    public function areGroupsRenderedFirst()
     {
-        return $this->grouplessRenderedFirst;
+        return $this->groupsRenderedFirst;
     }
 
     /**
-     * @param boolean $grouplessRenderedFirst
+     * @param boolean $groupsRenderedFirst
      * @return $this
      */
-    public function setGrouplessRenderedFirst($grouplessRenderedFirst = TRUE)
+    public function setGroupsRenderedFirst($groupsRenderedFirst = TRUE)
     {
-        $this->grouplessRenderedFirst = (bool)$grouplessRenderedFirst;
+        $this->groupsRenderedFirst = (bool)$groupsRenderedFirst;
         return $this;
     }
 
