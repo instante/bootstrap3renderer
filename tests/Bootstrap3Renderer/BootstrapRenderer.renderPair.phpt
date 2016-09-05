@@ -16,6 +16,7 @@ $renderer = new BootstrapRenderer;
 $renderer->controlRenderers['*'] = $controlRenderer = mock(IControlRenderer::class);
 $control = mock(IControl::class);
 $controlRenderer->shouldReceive('renderPair')->with($control)->once();
+$control->shouldReceive('getErrors')->andReturn([]);
 Assert::exception(function () use ($renderer, $control) {
     $renderer->renderPair($control);
 }, InvalidStateException::class, '~No form set~');
