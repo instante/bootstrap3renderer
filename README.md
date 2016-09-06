@@ -12,6 +12,9 @@ Lots of internals changed in Nette 2.4. Instante Bootstrap renderer
 
 Testing this alpha and submitting any issues and/or pull requests to help
  improve it is welcomed.
+ 
+**If you need Nette <= 2.3 compatibility or have no time to adopt to new API,
+use Bootstrap 3 Renderer version 1.\***
 
 Rendering Nette forms for Bootstrap 3
 Based on [http://github.com/kdyby/BootstrapFormRenderer](http://github.com/kdyby/BootstrapFormRenderer)
