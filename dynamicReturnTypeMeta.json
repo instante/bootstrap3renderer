@@ -1,0 +1,9 @@
+{
+    "methodCalls": [
+        {
+            "class": "\\Instante\\Bootstrap3Renderer\\BootstrapFormFactory",
+            "method": "create",
+            "position": 0
+        }
+    ]
+}
