@@ -39,10 +39,6 @@ use Traversable;
  * $form->setRenderer(new Instante\Bootstrap3Renderer\BootstrapRenderer);
  * </code>
  *
- * TODO somehow set as default renderer using the extension
- *
- * BACKLOG add support for simple rendering of styled checkbox and radio elements
- *
  * @property PrototypeContainer $prototypes
  */
 class BootstrapRenderer implements IExtendedFormRenderer
