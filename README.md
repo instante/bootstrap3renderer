@@ -1,31 +1,35 @@
-Instante/Bootstap3Renderer
-======
+# Instante/Bootstap3Renderer
 
 [![Build Status](https://travis-ci.org/instante/bootstrap3renderer.svg?branch=master)](https://travis-ci.org/instante/bootstrap3renderer)
 [![Downloads this Month](https://img.shields.io/packagist/dm/instante/bootstrap-3-renderer.svg)](https://packagist.org/packages/instante/bootstrap-3-renderer)
 [![Latest stable](https://img.shields.io/packagist/v/instante/bootstrap-3-renderer.svg)](https://packagist.org/packages/instante/bootstrap-3-renderer)
 
-Preparing new version!
-----------------------
-Lots of internals changed in Nette 2.4. We've decided to completely rewrite this utility for it, so stay tuned, Instante Bootstrap renderer version 2.0 will be coming soon.
+## Version 2.0 alpha is out!
+Lots of internals changed in Nette 2.4. Instante Bootstrap renderer
+ version 2.0 was completely re-written to get rid of much legacy code,
+ bringing up new, cleaner API and new features in advanced custom rendering.
+ Also, version 2.0 replaces several "magics" by cleaner OOP solution.
+
+Testing this alpha and submitting any issues and/or pull requests to help
+ improve it is welcomed.
 
 Rendering Nette forms for Bootstrap 3
 Based on [http://github.com/kdyby/BootstrapFormRenderer](http://github.com/kdyby/BootstrapFormRenderer)
 
-Requirements
-------------
+## Requirements
 
-- PHP 5.5 or higher
+- [Nette Framework 2.4 forms](https://github.com/nette/forms)
+- PHP 5.6
+- instante/extended-form-macros
 
-- [Nette Framework](https://github.com/nette/nette) 2.2
+## Installation
 
-
-
-Installation
-------------
-
-The best way to install Instante/Bootstap3Renderer is using  [Composer](http://getcomposer.org/):
+The best way to install is using composer:
 
 ```sh
-$ composer require instante/bootstrap-3-renderer:@dev
+composer require instante/bootstrap-3-renderer
 ```
+
+## Usage
+
+See [Documentation](https://github.com/instante/bootstrap3renderer/blob/master/docs/index.md)
