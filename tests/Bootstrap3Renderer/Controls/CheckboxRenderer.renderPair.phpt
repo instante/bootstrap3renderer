@@ -34,7 +34,7 @@ Assert::type(Html::class, $pair);
 Assert::same('form-group', $pair->getAttribute('class'));
 
 // .checkbox wrapper
-Assert::same('checkbox', $pair[0]->getAttribute('class'));
+Assert::same('checkbox', $pair[2][0]->getAttribute('class'));
 
 $rendered = (string)$pair;
 
@@ -56,6 +56,6 @@ $pairH = $renderer->renderPair($form['foo']);
 Assert::contains('col-sm-8', (string)$pairH);
 Assert::contains('col-sm-offset-4', (string)$pairH);
 
-Assert::contains('[errors]', (string)$pairH[0]);
-Assert::contains('[desc]', (string)$pairH[0]);
+Assert::contains('[errors]', (string)$pairH);
+Assert::contains('[desc]', (string)$pairH);
 
