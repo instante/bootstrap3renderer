@@ -376,8 +376,10 @@ class BootstrapRenderer implements IExtendedFormRenderer
                 } else {
                     if (count($buttons) > 0) {
                         $ret->addHtml($this->renderButtons($buttons));
+                        $this->addSpace($ret);
                     }
                     $ret->addHtml($this->renderPair($control));
+                    $this->addSpace($ret);
                     $buttons = [];
                 }
             }
@@ -421,7 +423,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
             if ($first) {
                 $first = FALSE;
             } else {
-                $container->addText("\n"); // inline button separator space
+                $this->addSpace($container);
             }
             $container->addHtml($this->renderButton($button));
 
@@ -622,5 +624,10 @@ class BootstrapRenderer implements IExtendedFormRenderer
             return $group->getControls() && $group->getOption('visual');
         });
         return $groups;
+    }
+
+    private function addSpace(Html $ret)
+    {
+        $ret->addText("\n");
     }
 }

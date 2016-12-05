@@ -53,11 +53,17 @@ class PrototypeContainer
     public static function createDefault()
     {
         $c = new static;
-        $c->pair = PlaceholderHtml::el('div', ['class' => 'form-group'])
-            ->setPlaceholder('label')
-            ->setPlaceholder('control')
-            ->setPlaceholder('errors')
-            ->setPlaceholder('description');
+        $c->pair = PlaceholderHtml::el('div', ['class' => 'form-group']);
+        $labelPlaceholder = Html::el();
+        $inputPlaceholder = Html::el();
+        $c->pair->addHtml($labelPlaceholder);
+        $c->pair->addText("\n");
+        $c->pair->addHtml($inputPlaceholder);
+        $c->pair
+            ->setPlaceholder($labelPlaceholder, 'label')
+            ->setPlaceholder($inputPlaceholder, 'control')
+            ->setPlaceholder($inputPlaceholder, 'errors')
+            ->setPlaceholder($inputPlaceholder, 'description');
         $c->emptyLabel = PlaceholderHtml::el('label');
         $c->controlDescription = PlaceholderHtml::el('span', ['class' => 'help-block']);
 
