@@ -7,6 +7,15 @@ services:
     formFactory: Instante\Bootstrap3Renderer\BootstrapFormFactory
 ```
 
+To make latte form macros work properly with Bootstrap, register the
+ extended form macros extension, which is installed along with
+ Bootstrap 3 Renderer:
+
+```
+extensions:
+    extendedFormMacros: Instante\ExtendedFormMacros\DI\ExtendedFormMacrosExtension
+```
+
 Inject the factory to a presenter/component/whatever and create a form
 
 ```php

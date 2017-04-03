@@ -4,14 +4,11 @@
 [![Downloads this Month](https://img.shields.io/packagist/dm/instante/bootstrap-3-renderer.svg)](https://packagist.org/packages/instante/bootstrap-3-renderer)
 [![Latest stable](https://img.shields.io/packagist/v/instante/bootstrap-3-renderer.svg)](https://packagist.org/packages/instante/bootstrap-3-renderer)
 
-## Version 2.0 alpha is out!
+## Version 2.0
 Lots of internals changed in Nette 2.4. Instante Bootstrap renderer
  version 2.0 was completely re-written to get rid of much legacy code,
  bringing up new, cleaner API and new features in advanced custom rendering.
  Also, version 2.0 replaces several "magics" by cleaner OOP solution.
-
-Testing this alpha and submitting any issues and/or pull requests to help
- improve it is welcomed.
  
 **If you need Nette <= 2.3 compatibility or have no time to adopt to new API,
 use Bootstrap 3 Renderer version 1.***
