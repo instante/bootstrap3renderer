@@ -519,6 +519,7 @@ class BootstrapRenderer implements IExtendedFormRenderer
     public function renderButton(IControl $button, array $attrs = [])
     {
         $this->assertInForm();
+        $this->renderedControls->attach($button);
 
         /** @var Html $el */
         $el = SecureCallHelper::tryCall($button, 'getControl');
