@@ -11,7 +11,7 @@ To make latte form macros work properly with Bootstrap, register the
  extended form macros extension, which is installed along with
  Bootstrap 3 Renderer:
 
-```
+```yml
 extensions:
     extendedFormMacros: Instante\ExtendedFormMacros\DI\ExtendedFormMacrosExtension
 ```
