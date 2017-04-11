@@ -13,6 +13,8 @@ use Nette\Utils\Html;
 
 class DefaultControlRenderer implements IControlRenderer
 {
+    const FORM_LABEL_CLASS = 'control-label';
+    
     /** @var BootstrapRenderer */
     protected $bootstrapRenderer;
 
@@ -110,6 +112,9 @@ class DefaultControlRenderer implements IControlRenderer
         if ($el instanceof Html) {
             $el->addAttributes($attrs);
             if ($r->getRenderMode() === RenderModeEnum::HORIZONTAL) {
+                if ($el->getName() !== '') {
+                    $el->appendAttribute('class', self::FORM_LABEL_CLASS);
+                }
                 $el->appendAttribute('class', $r->getColumnsClass($r->getLabelColumns()));
             }
         }
