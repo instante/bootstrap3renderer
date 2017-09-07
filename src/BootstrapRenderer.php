@@ -240,9 +240,12 @@ class BootstrapRenderer implements IExtendedFormRenderer
 
     public function renderBegin(Form $form, array $attrs = [], $withTags = TRUE)
     {
-        if ($this->form !== $form) {
-            $this->form = $form;
+        if ($this->form !== NULL) {
+            throw new InvalidStateException(
+                'Cannot render nested form. If you finished rendering of previous form without calling ::renderEnd()'
+                . ' and this is intended, use ::reset() method before rendering a new form.');
         }
+        $this->form = $form;
 
         $this->renderedControls = new SplObjectStorage;
         $this->addFormModeClass($form, $attrs);
@@ -593,6 +596,15 @@ class BootstrapRenderer implements IExtendedFormRenderer
     {
         $id = SecureCallHelper::tryCall($control, 'getHtmlId') ?: ('-anonymous-' . (self::$uniqueDescriptionId++));
         return 'describe-' . $id;
+    }
+
+    /**
+     * Remove reference to form from the renderer.
+     * Use this if you want to call another renderBegin() without properly ending previous form with renderEnd().
+     */
+    public function reset()
+    {
+        $this->form = NULL;
     }
 
     /**

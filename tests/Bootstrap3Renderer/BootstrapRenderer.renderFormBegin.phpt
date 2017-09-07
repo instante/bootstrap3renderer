@@ -13,13 +13,17 @@ $form = new Form;
 
 $renderer = new BootstrapRenderer;
 Assert::same('<form action="" method="post">', $renderer->renderBegin($form));
+$renderer->reset();
 
 $renderer->setRenderMode(RenderModeEnum::HORIZONTAL);
 Assert::same('<form action="" method="post" class="form-horizontal">', $renderer->renderBegin($form));
+$renderer->reset();
 
 $renderer->setRenderMode(RenderModeEnum::INLINE);
 Assert::same('<form action="" method="post" class="form-inline">', $renderer->renderBegin($form));
+$renderer->reset();
 
 Assert::match('~class=(?=.*\bform-inline\b)(?=.*\bfoo\b)~', $renderer->renderBegin($form, ['class' => 'foo'])); //has both form-inline and foo class
+$renderer->reset();
 
 Assert::same('<form action="" method="post">', $renderer->renderBegin($form, ['class' => 'no-form-inline']));
