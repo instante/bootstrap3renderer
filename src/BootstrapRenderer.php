@@ -25,6 +25,8 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Controls\TextBase;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
+use Nette\Forms\Rendering\DefaultFormRenderer;
+use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\NotSupportedException;
 use Nette\SmartObject;
@@ -188,6 +190,13 @@ class BootstrapRenderer implements IExtendedFormRenderer
     /** {@inheritdoc} */
     public function render(Form $form)
     {
+        if (func_num_args() > 1) {
+            throw new InvalidArgumentException(sprintf(
+                '%s does not suppot $mode argument like %s::render() does. Use ::render{Begin|GlobalErrors|Body|End} instead.',
+                self::class,
+                DefaultFormRenderer::class
+            ));
+        }
         $s = $this->renderBegin($form);
         $s .= $this->renderGlobalErrors();
         $s .= $this->renderBody();
