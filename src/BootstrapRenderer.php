@@ -422,25 +422,26 @@ class BootstrapRenderer implements IExtendedFormRenderer
             return Html::el();
         }
         if ($this->renderMode === RenderModeEnum::HORIZONTAL) {
-            $container = clone $this->prototypes->horizontalButtons;
+            $rowContainer = clone $this->prototypes->horizontalButtons;
             // set inner grid element to "col-ss-<inputcolumns> col-ss-offset-<labelcolumns>
-            $container->getPlaceholder('cols')
+            $buttonColsContainer = $rowContainer->getPlaceholder('cols');
+            $buttonColsContainer
                 ->appendAttribute('class', $this->getColumnsClass($this->inputColumns))
                 ->appendAttribute('class', $this->getOffsetClass($this->labelColumns));
         } else {
-            $container = PlaceholderHtml::el();
+            $rowContainer = $buttonColsContainer = PlaceholderHtml::el();
         }
         $first = TRUE;
         foreach ($buttons as $button) {
             if ($first) {
                 $first = FALSE;
             } else {
-                $this->addSpace($container);
+                $this->addSpace($buttonColsContainer);
             }
-            $container->addHtml($this->renderButton($button));
+            $buttonColsContainer->addHtml($this->renderButton($button));
 
         }
-        return $container;
+        return $rowContainer;
     }
 
     /**

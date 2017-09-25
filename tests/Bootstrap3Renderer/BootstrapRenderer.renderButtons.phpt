@@ -42,12 +42,14 @@ Assert::same('', (string)$empty);
 $renderer->setRenderMode(RenderModeEnum::HORIZONTAL)
     ->setColumnMinScreenSize(ScreenSizeEnum::LG)
     ->setLabelColumns(4);
-$verticalRender = $renderer->renderButtons([new FakeButton('{Foo}'), new FakeButton('{Bar}')]);
-Assert::type(Html::class, $verticalRender);
-$verticalRenderStr = (string)$verticalRender;
-Assert::match('~{Foo}\s+{Bar}~', $verticalRenderStr);
-Assert::contains('col-lg-8', $verticalRenderStr);
-Assert::contains('col-lg-offset-4', $verticalRenderStr);
+$horizontalRender = $renderer->renderButtons([new FakeButton('{Foo}'), new FakeButton('{Bar}')]);
+Assert::type(Html::class, $horizontalRender);
+$horizontalRenderStr = (string)$horizontalRender;
+
+//Test that both buttons are rendered in the proper inner div
+Assert::match('~<div.*<div.*{Foo}\s+{Bar}.*</div>.*</div>~', $horizontalRenderStr);
+Assert::contains('col-lg-8', $horizontalRenderStr);
+Assert::contains('col-lg-offset-4', $horizontalRenderStr);
 
 //other render
 $renderer->setRenderMode(RenderModeEnum::VERTICAL);
