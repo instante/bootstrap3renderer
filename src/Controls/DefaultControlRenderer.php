@@ -102,7 +102,7 @@ class DefaultControlRenderer implements IControlRenderer
             throw new InvalidArgumentException(__CLASS__ . ' does not support rendering control parts');
         }
         $r = $this->bootstrapRenderer;
-        $el = $this->getControlLabel($control, $part);
+        $el = $this->getControlLabel($control);
         if ($el === NULL) {
             $el = clone $r->prototypes->emptyLabel;
             if (method_exists($control, 'getHtmlId')) {
