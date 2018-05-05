@@ -20,15 +20,20 @@ $form->addPassword('password', 'Password')->setRequired();
 $form->addButton('btn', 'Push me');
 $form->addHidden('you', 'dont see me');
 $form->addRadioList('sex', 'Gender', ['m' => 'Male', 'f', 'Female'])->setValue('m')->setDisabled();
-$form->addTextArea('text', 'Description')->setValue('Some text');
+$form
+    ->addTextArea('text', 'Description')
+    ->setValue('Some text')
+    ->setOption('description', 'Better be long');
+;
 $form->addUpload('photo', 'Your photo here');
 $form->addSubmit('sub', 'Send me now');
 $form->addSubmit('notme', 'But not me')->setDisabled();
 
-ob_start();
-require __DIR__ . '/bootstrap.phtml';
-$content = ob_get_clean();
-file_put_contents(TestBootstrap::$tempDir . '/' . basename(__FILE__) . '.html', simplifyHtmlWhitespaces($content));
+// uncomment to dump browser-renderable html to temp dir
+//ob_start();
+//require __DIR__ . '/bootstrap.phtml';
+//$content = ob_get_clean();
+//file_put_contents(TestBootstrap::$tempDir . '/' . basename(__FILE__) . '.html', simplifyHtmlWhitespaces($content));
 
 ob_start();
 $form->render();

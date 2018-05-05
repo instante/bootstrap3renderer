@@ -9,6 +9,7 @@ use Instante\ExtendedFormMacros\PairAttributes;
 use Instante\Helpers\SecureCallHelper;
 use InvalidArgumentException;
 use Nette\Forms\IControl;
+use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
 class DefaultControlRenderer implements IControlRenderer
@@ -59,12 +60,21 @@ class DefaultControlRenderer implements IControlRenderer
             $columns = Html::el('div')
                 ->appendAttribute('class', $r->getColumnsClass($r->getInputColumns()))
                 ->addHtml($control);
-            if ($pair->getPlaceholder('errors') === $pair) {
+            // To use custom errors or description placeholder in prototype
+            // containers with horizontal form rendering, use
+            // 'horizontal-errors' / 'horizontal-description' placeholders
+            // - they will be transformed to errors/description placeholder there.
+            try {
+                $pair->setPlaceholder($pair->getPlaceholder('horizontal-errors'), 'errors');
+            } catch (InvalidStateException $e) {
                 $pair->setPlaceholder($columns, 'errors');
             }
-            if ($pair->getPlaceholder('description') === $pair) {
+            try {
+                $pair->setPlaceholder($pair->getPlaceholder('horizontal-description'), 'errors');
+            } catch (InvalidStateException $e) {
                 $pair->setPlaceholder($columns, 'description');
             }
+
             return $columns;
         } else {
             return $control;
@@ -102,7 +112,7 @@ class DefaultControlRenderer implements IControlRenderer
             throw new InvalidArgumentException(__CLASS__ . ' does not support rendering control parts');
         }
         $r = $this->bootstrapRenderer;
-        $el = $this->getControlLabel($control, $part);
+        $el = $this->getControlLabel($control);
         if ($el === NULL) {
             $el = clone $r->prototypes->emptyLabel;
             if (method_exists($control, 'getHtmlId')) {
@@ -113,7 +123,7 @@ class DefaultControlRenderer implements IControlRenderer
             $el->addAttributes($attrs);
             if ($r->getRenderMode() === RenderModeEnum::HORIZONTAL) {
                 if ($el->getName() !== '') {
-                    $el->appendAttribute('class', self::FORM_LABEL_CLASS);
+                    $el->appendAttribute('class', static::FORM_LABEL_CLASS);
                 }
                 $el->appendAttribute('class', $r->getColumnsClass($r->getLabelColumns()));
             }

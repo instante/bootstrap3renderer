@@ -3,6 +3,7 @@
 namespace InstanteTests\Bootstrap3Renderer;
 
 use Instante\Bootstrap3Renderer\BootstrapRenderer;
+use Instante\Bootstrap3Renderer\RenderModeEnum;
 use Instante\Tests\TestBootstrap;
 use Nette\Forms\Form;
 use Tester\Assert;
@@ -10,14 +11,24 @@ use Tester\Assert;
 require_once __DIR__ . '/../bootstrap.php';
 
 $form = new Form;
-$form->setRenderer(new BootstrapRenderer);
+$form->setRenderer(new BootstrapRenderer(RenderModeEnum::HORIZONTAL));
 $form->addText('name', 'Your name')->addError('Too short');
-$form->addGroup('G1');
 $form->addCheckbox('agree', 'I agree');
 $form->addImage('picture', '//avatars1.githubusercontent.com/u/13833444?v=3&s=200');
-$form->addGroup('G2');
 $form->addSelect('sure', 'Are you sure?', ['y' => 'yes', 'n' => 'no']);
-$form->addSubmit('y', 'Send');
+$form->addCheckboxList('list', 'List of options', ['a' => 'First', 'b' => 'Second']);
+$form->addPassword('password', 'Password')->setRequired();
+$form->addButton('btn', 'Push me');
+$form->addHidden('you', 'dont see me');
+$form->addRadioList('sex', 'Gender', ['m' => 'Male', 'f', 'Female'])->setValue('m')->setDisabled();
+$form
+    ->addTextArea('text', 'Description')
+    ->setValue('Some text')
+    ->setOption('description', 'Better be long');
+;
+$form->addUpload('photo', 'Your photo here');
+$form->addSubmit('sub', 'Send me now');
+$form->addSubmit('notme', 'But not me')->setDisabled();
 
 // uncomment to dump browser-renderable html to temp dir
 //ob_start();
@@ -29,6 +40,4 @@ ob_start();
 $form->render();
 $content = ob_get_clean();
 
-Assert::matchFile(__DIR__ . '/expected/groups.htm', simplifyHtmlWhitespaces($content));
-
-
+Assert::matchFile(__DIR__ . '/expected/horizontal.htm', simplifyHtmlWhitespaces($content));
