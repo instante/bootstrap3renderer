@@ -11,6 +11,8 @@ use Nette\Utils\Html;
 
 class CheckboxRenderer extends DefaultControlRenderer
 {
+    // override parent's control-label class not used for checkbox labels
+    const FORM_LABEL_CLASS = '';
 
     /**
      * div.form-group
