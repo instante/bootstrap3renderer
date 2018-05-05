@@ -9,6 +9,7 @@ use Instante\ExtendedFormMacros\PairAttributes;
 use Instante\Helpers\SecureCallHelper;
 use InvalidArgumentException;
 use Nette\Forms\IControl;
+use Nette\InvalidStateException;
 use Nette\Utils\Html;
 
 class DefaultControlRenderer implements IControlRenderer
@@ -59,12 +60,21 @@ class DefaultControlRenderer implements IControlRenderer
             $columns = Html::el('div')
                 ->appendAttribute('class', $r->getColumnsClass($r->getInputColumns()))
                 ->addHtml($control);
-            if ($pair->getPlaceholder('errors') === $pair) {
+            // To use custom errors or description placeholder in prototype
+            // containers with horizontal form rendering, use
+            // 'horizontal-errors' / 'horizontal-description' placeholders
+            // - they will be transformed to errors/description placeholder there.
+            try {
+                $pair->setPlaceholder($pair->getPlaceholder('horizontal-errors'), 'errors');
+            } catch (InvalidStateException $e) {
                 $pair->setPlaceholder($columns, 'errors');
             }
-            if ($pair->getPlaceholder('description') === $pair) {
+            try {
+                $pair->setPlaceholder($pair->getPlaceholder('horizontal-description'), 'errors');
+            } catch (InvalidStateException $e) {
                 $pair->setPlaceholder($columns, 'description');
             }
+
             return $columns;
         } else {
             return $control;
