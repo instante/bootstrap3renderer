@@ -19,10 +19,11 @@ $form->addGroup('G2');
 $form->addSelect('sure', 'Are you sure?', ['y' => 'yes', 'n' => 'no']);
 $form->addSubmit('y', 'Send');
 
-ob_start();
-require __DIR__ . '/bootstrap.phtml';
-$content = ob_get_clean();
-file_put_contents(TestBootstrap::$tempDir . '/' . basename(__FILE__) . '.html', simplifyHtmlWhitespaces($content));
+// uncomment to dump browser-renderable html to temp dir
+//ob_start();
+//require __DIR__ . '/bootstrap.phtml';
+//$content = ob_get_clean();
+//file_put_contents(TestBootstrap::$tempDir . '/' . basename(__FILE__) . '.html', simplifyHtmlWhitespaces($content));
 
 ob_start();
 $form->render();
